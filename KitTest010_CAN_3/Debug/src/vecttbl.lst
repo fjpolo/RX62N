@@ -1,0 +1,80 @@
+* RX FAMILY ASSEMBLER V2.08.00.01 [06 Oct 2017] *  SOURCE LIST  Fri Jul 06 11:04:42 2018
+
+LOC.     OBJ.              0XMDA SOURCE STATEMENT
+
+                                 ;RX Family C/C++ Compiler (V2.08.00 [30 Nov 2017])  06-Jul-2018 11:04:42
+                                 
+                                 ;*** CPU TYPE ***
+                                 
+                                 ;-CPU=RX600
+                                 
+                                 ;*** COMMAND PARAMETER ***
+                                 
+                                 ;-output=src=vecttbl.src
+                                 ;-cpu=rx600
+                                 ;-fpu
+                                 ;-include=C:\PROGRA~2\RENESA~1\CS_~1\CC\CC-RX\V208~1.00\include,C:\Users\fpolo\e2_studio\workspace\KitTest010_CAN_3\src
+                                 ;-define=NOT_USE_CAN_POLL=1
+                                 ;-lang=c99
+                                 ;-nomessage
+                                 ;-change_message=information
+                                 ;-obj_path=src
+                                 ;-debug
+                                 ;-listfile=src/vecttbl.lst
+                                 ;-show=source
+                                 ;-optimize=0
+                                 ;-nologo
+                                 ;vecttbl.c
+                                 
+                                 		.glb	_Fixed_Vectors
+                                 		.glb	_Excep_SuperVisorInst
+                                 		.glb	_Excep_Access
+                                 		.glb	_Dummy
+                                 		.glb	_Excep_UndefinedInst
+                                 		.glb	_Excep_FloatingPoint
+                                 		.glb	_NonMaskableInterrupt
+                                 		.glb	_PowerON_Reset_PC
+                                 ;LineNo. C-SOURCE STATEMENT
+                                 
+                                 		.SECTION	FIXEDVECT,ROMDATA,ALIGN=4
+00000000                         _Fixed_Vectors:
+00000000 rrrrrrrr                		.lword	_Excep_SuperVisorInst
+00000004 rrrrrrrr                		.lword	_Excep_Access
+00000008 rrrrrrrr                		.lword	_Dummy
+0000000C rrrrrrrr                		.lword	_Excep_UndefinedInst
+00000010 rrrrrrrr                		.lword	_Dummy
+00000014 rrrrrrrr                		.lword	_Excep_FloatingPoint
+00000018 rrrrrrrr                		.lword	_Dummy
+0000001C rrrrrrrr                		.lword	_Dummy
+00000020 rrrrrrrr                		.lword	_Dummy
+00000024 rrrrrrrr                		.lword	_Dummy
+00000028 rrrrrrrr                		.lword	_NonMaskableInterrupt
+0000002C rrrrrrrr                		.lword	_PowerON_Reset_PC
+                                 		.END
+
+Information List
+
+TOTAL ERROR(S)    00000
+TOTAL WARNING(S)  00000
+TOTAL LINE(S)     00049   LINES
+
+Section List
+
+Attr         Size               Name
+ROMDATA  0000000048(00000030H)  FIXEDVECT
+
+Cpu Type
+
+-CPU=RX600
+
+Command Parameter
+
+-subcommand=C:\Users\fpolo\AppData\Local\Temp\$ccrx34AD77E\$ccrx\vecttbl.src.cmd
+    -nologo
+    -cpu=rx600
+    -fpu
+    -fint_register=0
+    -debug
+    -endian=little
+-listfile=C:\Users\fpolo\e2_studio\workspace\KitTest010_CAN_3\Debug\src\vecttbl.lst
+-output=C:\Users\fpolo\e2_studio\workspace\KitTest010_CAN_3\Debug\src\vecttbl.obj

@@ -1,0 +1,709 @@
+* RX FAMILY ASSEMBLER V2.08.00.01 [06 Oct 2017] *  SOURCE LIST  Fri Jul 06 09:06:34 2018
+
+LOC.     OBJ.              0XMDA SOURCE STATEMENT
+
+                                 ;RX Family C/C++ Compiler (V2.08.00 [30 Nov 2017])  06-Jul-2018 09:06:33
+                                 
+                                 ;*** CPU TYPE ***
+                                 
+                                 ;-CPU=RX600
+                                 
+                                 ;*** COMMAND PARAMETER ***
+                                 
+                                 ;-output=src=lcd.src
+                                 ;-cpu=rx600
+                                 ;-fpu
+                                 ;-include=C:\PROGRA~2\RENESA~1\CS_~1\CC\CC-RX\V208~1.00\include,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2
+                                 ;-define=NOT_DEBUG=1
+                                 ;-lang=c99
+                                 ;-nomessage
+                                 ;-change_message=information
+                                 ;-obj_path=src
+                                 ;-debug
+                                 ;-listfile=src/lcd.lst
+                                 ;-show=source
+                                 ;-optimize=0
+                                 ;-speed
+                                 ;-nologo
+                                 ;lcd.c
+                                 
+                                 		.glb	_G_lcd
+                                 		.glb	_InitialiseDisplay
+                                 		.glb	_GlyphOpen
+                                 		.glb	_GlyphNormalScreen
+                                 		.glb	_GlyphSetFont
+                                 		.glb	_GlyphClearScreen
+                                 		.glb	_DisplayString
+                                 		.glb	_GlyphEraseBlock
+                                 		.glb	_GlyphSetXY
+                                 		.glb	_GlyphString
+                                 		.glb	_LcdShow2DigHex
+                                 		.glb	_LcdShow4DigHex
+                                 		.glb	_IntToAsciiHex
+                                 ;LineNo. C-SOURCE STATEMENT
+                                 
+                                 		.SECTION	P,CODE
+00000000                         _InitialiseDisplay:
+                                 		.STACK	_InitialiseDisplay=4
+                                 ;       1 /***********************************************************************************
+                                 ;       2 FILE NAME 		lcd.c
+                                 ;       3 DESCRIPTION 	LCD Module utility functions.
+                                 ;       4 		Written for KS0066u compatible LCD Module.
+                                 ;       5 		(8 characters by 2 lines)
+                                 ;       6 
+                                 ;       7 Copyright : 2008 Renesas Technology Europe Ltd.
+                                 ;       8 Copyright : 2008 Renesas Technology Corporation.
+                                 ;       9 All Rights Reserved
+                                 ;      10 ***********************************************************************************/
+                                 ;      11 
+                                 ;      12 /***********************************************************************************
+                                 ;      13 Revision History
+                                 ;      14 DD.MM.YYYY OSO-UID Description
+                                 ;      15 05.03.2008 RTE-MBA First Release
+                                 ;      16 ***********************************************************************************/
+                                 ;      17 
+                                 ;      18 /******************************************************************************
+                                 ;      19 Includes   <System Includes> , "Project Includes"
+                                 ;      20 ******************************************************************************/
+                                 ;      21 #include <machine.h>
+                                 ;      22 /* Defines for I/O registers */
+                                 ;      23 #include <stdio.h>
+                                 ;      24 #include <stdint.h>
+                                 ;      25 #include <string.h>  
+                                 ;      26 /* rsk1668def.h provides common defines for widely used items. */
+                                 ;      27 #include "rdkrx62n.h"
+                                 ;      28 /* Header files for lcd.c */
+                                 ;      29 #include "lcd.h"
+                                 ;      30 #include "Glyph_API.h"
+                                 ;      31 #include "iodefine.h"
+                                 ;      32 
+                                 ;      33 /******************************************************************************
+                                 ;      34 Typedef definitions
+                                 ;      35 ******************************************************************************/
+                                 ;      36 
+                                 ;      37 /******************************************************************************
+                                 ;      38 Macro definitions
+                                 ;      39 ******************************************************************************/
+                                 ;      40 #define LCDOKAYA	1
+                                 ;      41 //#define LCD2BY8	1
+                                 ;      42 
+                                 ;      43 /******************************************************************************
+                                 ;      44 Imported global variables and functions (from other files)
+                                 ;      45 ******************************************************************************/
+                                 ;      46 /******************************************************************************
+                                 ;      47 Exported global variables and functions (to be accessed by other files)
+                                 ;      48 ******************************************************************************/
+                                 ;      49 #if LCD2BY8
+                                 ;      50 static unsigned char next_pos;
+                                 ;      51 #endif
+                                 ;      52 
+                                 ;      53 /******************************************************************************
+                                 ;      54 Private global variables and functions
+                                 ;      55 ******************************************************************************/
+                                 ;      56 T_glyphHandle G_lcd ;
+                                 ;      57 
+                                 ;      58 /**********************************************************************************
+                                 ;      59 User Program Code
+                                 ;      60 ***********************************************************************************/
+                                 ;      61 #if LCD2BY8
+                                 ;      62 /*****************************************************************************
+                                 ;      63 Name:			InitialiseDisplay
+                                 ;      64 Description:	Intializes the LCD display. 
+                                 ;      65 Parameters:		none				
+                                 ;      66 Returns:		none
+                                 ;      67 *****************************************************************************/
+                                 ;      68 void InitialiseDisplay(void)
+                                 ;      69 {
+                                 ;      70 	/* Variable initialization */
+                                 ;      71 	next_pos = 0xFF;
+                                 ;      72 	
+                                 ;      73 	/* Power Up Delay for LCD Module */
+                                 ;      74 	EN_PIN = SET_BIT_HIGH;
+                                 ;      75 	DisplayDelay(7000);
+                                 ;      76 	EN_PIN = SET_BIT_LOW;
+                                 ;      77 	
+                                 ;      78 	/* Display initialises in 8 bit mode - so send one write (seen as 8 bit)
+                                 ;      79 		to set to 4 bit mode. */
+                                 ;      80 
+                                 ;      81 	/* Function Set */
+                                 ;      82 	LCD_nibble_write(CTRL_WR,0x03);
+                                 ;      83 	LCD_nibble_write(CTRL_WR,0x03);
+                                 ;      84 	DisplayDelay(39);
+                                 ;      85  
+                                 ;      86 	/* Configure display */
+                                 ;      87 	LCD_nibble_write(CTRL_WR,0x03);
+                                 ;      88 	LCD_nibble_write(CTRL_WR,0x02);
+                                 ;      89 	LCD_nibble_write(CTRL_WR,(LCD_DISPLAY_ON | LCD_TWO_LINE));
+                                 ;      90 	LCD_nibble_write(CTRL_WR,(LCD_DISPLAY_ON | LCD_TWO_LINE));
+                                 ;      91 	DisplayDelay(39);
+                                 ;      92 
+                                 ;      93 	/* Display ON/OFF control */
+                                 ;      94 	LCD_write(CTRL_WR,LCD_CURSOR_OFF);
+                                 ;      95 	DisplayDelay(39);
+                                 ;      96 
+                                 ;      97 	/* Display Clear */
+                                 ;      98 	LCD_write(CTRL_WR,LCD_CLEAR);
+                                 ;      99 	DisplayDelay(1530);
+                                 ;     100 
+                                 ;     101 	/* Entry Mode Set */
+                                 ;     102 	LCD_write(CTRL_WR,0x06);
+                                 ;     103 	LCD_write(CTRL_WR,LCD_HOME_L1);
+                                 ;     104 }
+                                 ;     105 /**********************************************************************************
+                                 ;     106 End of function InitialiseDisplay
+                                 ;     107 ***********************************************************************************/   
+                                 ;     108 
+                                 ;     109 /*****************************************************************************
+                                 ;     110 Name:		DisplayString
+                                 ;     111 Description:	This function controls LCD writes to line 1 or 2 of the LCD.
+                                 ;     112 				You need to use the defines LCD_LINE1 and LCD_LINE2 in order
+                                 ;     113 				to specify the starting position.
+                                 ;     114 				For example, to start at the 2nd position on line 1...
+                                 ;     115 				DisplayString(LCD_LINE1 + 1, "Hello")
+                                 ;     116 Parameters:	position  Line number of display
+                                 ;     117 			string	Pointer to data to be written to display.
+                                 ;     118 					Last character should be null.
+                                 ;     119 Returns:	none
+                                 ;     120 *****************************************************************************/
+                                 ;     121 void DisplayString(uint8_t position, uint8_t* string)
+                                 ;     122 {
+                                 ;     123 	/* Set a line position if needed. If current cursor position is outside of the 
+                                 ;     124 	NUMB_CHARS_PER_LINE value, the current data writes are skipped.
+                                 ;     125 	If data are written byte to byte, no CTRL writes are written to LCD module
+                                 ;     126 	(CTRL writes takes more time) */
+                                 ;     127 	if (next_pos != position)
+                                 ;     128 	{
+                                 ;     129 		if ((position >= NUMB_CHARS_PER_LINE && position <= (LCD_LINE2-1)) 
+                                 ;     130 			|| position >= (NUMB_CHARS_PER_LINE + LCD_LINE2))
+                                 ;     131 		{
+                                 ;     132 			return;
+                                 ;     133 		}
+                                 ;     134 		
+                                 ;     135 		if (position < LCD_LINE2)
+                                 ;     136 		{
+                                 ;     137 			/* Configure LCD to write on Line 1 */
+                                 ;     138 			LCD_write(CTRL_WR, (unsigned char)(LCD_HOME_L1 + position));
+                                 ;     139 		}
+                                 ;     140 		else
+                                 ;     141 		{
+                                 ;     142 			/* Configure LCD to write on Line 2 */
+                                 ;     143 			LCD_write(CTRL_WR, (unsigned char)(LCD_HOME_L2 + position - LCD_LINE2));
+                                 ;     144 		}
+                                 ;     145 		/* Set position index to known value */
+                                 ;     146 		next_pos = position;	
+                                 ;     147 	}
+                                 ;     148 
+                                 ;     149 	do
+                                 ;     150 	{
+                                 ;     151 		/* Check for current position, if outside of NUMB_CHARS_PER_LINE, break */
+                                 ;     152 		if (next_pos == NUMB_CHARS_PER_LINE || next_pos == (NUMB_CHARS_PER_LINE + LCD_LINE2))
+                                 ;     153 		{
+                                 ;     154 			break;
+                                 ;     155 		}
+                                 ;     156 		
+                                 ;     157 		/* Write symbol to current LCD position */
+                                 ;     158 		LCD_write(DATA_WR,*string++);
+                                 ;     159 		
+                                 ;     160 		/* Increment position index */
+                                 ;     161 		next_pos++;
+                                 ;     162 	}
+                                 ;     163 	while (*string);
+                                 ;     164 }
+                                 ;     165 /**********************************************************************************
+                                 ;     166 End of function DisplayString
+                                 ;     167 ***********************************************************************************/   
+                                 ;     168 
+                                 ;     169 #else	//LCDOKAYA///////////////////////////////////////////////////////////
+                                 ;     170 
+                                 ;     171 /*****************************************************************************
+                                 ;     172 Name:          	InitialiseDisplay 
+                                 ;     173 Parameters:     -
+                                 ;     174 Returns:        -
+                                 ;     175 Description:    Intializes the LCD. 
+                                 ;     176 *****************************************************************************/
+                                 ;     177 void InitialiseDisplay( void )
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",177
+00000000 6602                    		MOV.L #00000000H, R2
+                                 ;     178 {
+                                 ;     179   if (GlyphOpen(&G_lcd, 0) == GLYPH_ERROR_NONE) 
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",179
+00000002 FB12rrrrrrrr            		MOV.L #_G_lcd, R1
+00000008 05rrrrrr             A  		BSR _GlyphOpen
+0000000C 6101                    		CMP #00H, R1
+0000000E 21rr                    		BNE L14
+00000010                         L11:	; if_then_bb
+                                 ;     180   {
+                                 ;     181       /* use Glyph full access direct functions */
+                                 ;     182       GlyphNormalScreen(G_lcd) ;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",182
+00000010 FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+00000016 ECE1                    		MOV.L [R14], R1
+00000018 05rrrrrr             A  		BSR _GlyphNormalScreen
+0000001C                         L12:	; if_then_bb.split
+                                 ;     183       GlyphSetFont(G_lcd, GLYPH_FONT_8_BY_16) ;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",183
+0000001C FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+00000022 ECE1                    		MOV.L [R14], R1
+00000024 6612                    		MOV.L #00000001H, R2
+00000026 05rrrrrr             A  		BSR _GlyphSetFont
+0000002A                         L13:	; if_then_bb.split1
+                                 ;     184       GlyphClearScreen(G_lcd) ;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",184
+0000002A FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+00000030 ECE1                    		MOV.L [R14], R1
+00000032 05rrrrrr             A  		BSR _GlyphClearScreen
+00000036 02                      		RTS
+00000037                         L14:	; return
+                                 ;     185   }
+                                 ;     186 }
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",186
+00000037 02                      		RTS
+00000038                         _DisplayString:
+                                 		.STACK	_DisplayString=20
+                                 ;     187 
+                                 ;     188 /*****************************************************************************
+                                 ;     189 Name:        	DisplayString   
+                                 ;     190 Parameters:  	position	Line number of display
+                                 ;     191 			    string		Pointer to data to be written to display.
+                                 ;     192 			    			Last character should be null.
+                                 ;     193 Returns:        none
+                                 ;     194 Description:    This function controls LCD writes to line 1 or 2 of the LCD.
+                                 ;     195                 You need to use the defines LCD_LINE1 and LCD_LINE2 in order
+                                 ;     196 				to specify the starting position.
+                                 ;     197 				For example, to start at the 2nd position on line 1...
+                                 ;     198 				   DisplayString(LCD_LINE1 + 1, "Hello")
+                                 ;     199 *****************************************************************************/
+                                 ;     200 void DisplayString(uint8_t lineNum, uint8_t* string)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",200
+00000038 60C0                    		SUB #0CH, R0
+0000003A 8289                    		MOV.B R1, 0BH[R0]
+0000003C A00A                    		MOV.L R2, 04H[R0]
+                                 ;     201 {
+                                 ;     202   // Figure out the number of characters
+                                 ;     203   // Clear the screen for n characters
+                                 ;     204   // Write the new characters
+                                 ;     205 
+                                 ;     206   int8_t y = lineNum - (lineNum % 8);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",206
+0000003E B289                    		MOVU.B 0BH[R0], R1
+00000040 EF1E                    		MOV.L R1, R14
+00000042 647E                    		AND #07H, R14
+00000044 43E1                    		SUB R14, R1
+00000046 8089                    		MOV.B R1, 03H[R0]
+00000048                         L16:	; entry.split
+                                 ;     207   int8_t xOffset = (lineNum % 8)<<3 ;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",207
+00000048 B289                    		MOVU.B 0BH[R0], R1
+0000004A 6471                    		AND #07H, R1
+0000004C 6C31                    		SHLL #03H, R1
+0000004E 8081                    		MOV.B R1, 02H[R0]
+00000050                         L17:	; entry.split1
+                                 ;     208 
+                                 ;     209   /* Draw text lines, 16 pixels high, 96 pixels wide */
+                                 ;     210 
+                                 ;     211   /* Clear the rectangle of this line */
+                                 ;     212   GlyphEraseBlock(G_lcd, xOffset, y, (95 - xOffset), y+15);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",212
+00000050 FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+00000056 ECE1                    		MOV.L [R14], R1
+00000058 888B                    		MOV.B 03H[R0], R3
+0000005A 8882                    		MOV.B 02H[R0], R2
+0000005C 6040                    		SUB #04H, R0
+0000005E 713E0F                  		ADD #0FH, R3, R14
+00000061 E30E                    		MOV.L R14, [R0]
+00000063 75445F                  		MOV.L #0000005FH, R4
+00000066 4324                    		SUB R2, R4
+00000068 05rrrrrr             A  		BSR _GlyphEraseBlock
+0000006C 6240                    		ADD #04H, R0
+0000006E                         L18:	; entry.split2
+                                 ;     213   GlyphSetXY(G_lcd, xOffset, y);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",213
+0000006E FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+00000074 ECE1                    		MOV.L [R14], R1
+00000076 888B                    		MOV.B 03H[R0], R3
+00000078 8882                    		MOV.B 02H[R0], R2
+0000007A 05rrrrrr             A  		BSR _GlyphSetXY
+0000007E                         L19:	; entry.split3
+                                 ;     214   GlyphString(G_lcd, (uint8_t *)string, strlen((const char*)string));
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",214
+0000007E A80C                    		MOV.L 04H[R0], R4
+00000080 FB36FF                  		MOV.L #0FFFFFFFFH, R3
+00000083 6602                    		MOV.L #00000000H, R2
+00000085 EF41                    		MOV.L R4, R1
+00000087 7F80                    		SUNTIL.B
+00000089 FBE2rrrrrrrr            		MOV.L #_G_lcd, R14
+0000008F ECE1                    		MOV.L [R14], R1
+00000091 FBE6FE                  		MOV.L #0FFFFFFFEH, R14
+00000094 433E                    		SUB R3, R14
+00000096 EF42                    		MOV.L R4, R2
+00000098 EFE3                    		MOV.L R14, R3
+0000009A 05rrrrrr             A  		BSR _GlyphString
+0000009E 6703                    		RTSD #0CH
+000000A0                         _LcdShow2DigHex:
+                                 		.STACK	_LcdShow2DigHex=12
+                                 ;     215 }
+                                 ;     216 #endif	//LCD type
+                                 ;     217 
+                                 ;     218 #if LCD2BY8
+                                 ;     219 /*****************************************************************************
+                                 ;     220 Name:		LCD_write
+                                 ;     221 Description:	Writes data to display. Sends command to display.  
+                                 ;     222 Parameters:	value - the value to write
+                                 ;     223 			data_or_ctrl - To write value as DATA or CONTROL
+                                 ;     224 							1 = DATA
+                                 ;     225 							0 = CONTROL
+                                 ;     226 Returns:	none
+                                 ;     227 *****************************************************************************/
+                                 ;     228 void LCD_write(unsigned char data_or_ctrl, unsigned char value)
+                                 ;     229 {
+                                 ;     230 	/* Write upper nibble first */
+                                 ;     231 	LCD_nibble_write(data_or_ctrl, (value & 0xF0) >> 4);
+                                 ;     232 
+                                 ;     233 	/* Write lower nibble second */
+                                 ;     234 	LCD_nibble_write(data_or_ctrl, (value & 0x0F));
+                                 ;     235 }
+                                 ;     236 /**********************************************************************************
+                                 ;     237 End of function LCD_write
+                                 ;     238 ***********************************************************************************/   
+                                 ;     239 
+                                 ;     240 /*****************************************************************************
+                                 ;     241 Name:		LCD_nibble_write
+                                 ;     242 Description:	Writes data to display. Sends command to display.  
+                                 ;     243 Parameters:	value - the value to write
+                                 ;     244 			data_or_ctrl - To write value as DATA or CONTROL
+                                 ;     245 							1 = DATA
+                                 ;     246 							0 = CONTROL
+                                 ;     247 Returns:	none
+                                 ;     248 *****************************************************************************/
+                                 ;     249 void LCD_nibble_write(unsigned char data_or_ctrl, unsigned char value)
+                                 ;     250 {
+                                 ;     251 	unsigned char ucStore;
+                                 ;     252 	/* Check for the type of data and set RS_PIN */
+                                 ;     253 	if (data_or_ctrl == DATA_WR)
+                                 ;     254 	{
+                                 ;     255 		RS_PIN = SET_BIT_HIGH;
+                                 ;     256 	}
+                                 ;     257 	else
+                                 ;     258 	{
+                                 ;     259 		RS_PIN = SET_BIT_LOW;
+                                 ;     260 	}
+                                 ;     261 	/* There must be 40ns between RS write and EN write */
+                                 ;     262 	DisplayDelay(2);
+                                 ;     263 	/* EN enable chip (HIGH) */
+                                 ;     264 	EN_PIN = SET_BIT_HIGH;
+                                 ;     265 	/* Tiny delay */		
+                                 ;     266 	DisplayDelay(2);
+                                 ;     267 	/* Clear port bits used */  
+                                 ;     268 	/* Set upper 4 bits of nibble on port pins. */
+                                 ;     269 	ucStore = DATA_PORT;
+                                 ;     270 	ucStore &= ~DATA_PORT_MASK;
+                                 ;     271 	/* OR in data */  
+                                 ;     272 	ucStore |= ((value << 4) & DATA_PORT_MASK );
+                                 ;     273 	/* Write lower 4 bits of nibble */
+                                 ;     274 	DATA_PORT = ucStore;
+                                 ;     275 
+                                 ;     276 	/* Write delay while En High */
+                                 ;     277 	DisplayDelay(20);
+                                 ;     278 	/* Latch data by dropping EN */	 
+                                 ;     279 	EN_PIN = SET_BIT_LOW;
+                                 ;     280 	/* Data hold delay */	   
+                                 ;     281 	DisplayDelay(40);		 
+                                 ;     282 
+                                 ;     283 	if (data_or_ctrl == CTRL_WR)
+                                 ;     284 	{
+                                 ;     285 		/* Extra delay needed for control writes */
+                                 ;     286 		DisplayDelay(80);	   
+                                 ;     287 	}	   
+                                 ;     288 }
+                                 ;     289 /**********************************************************************************
+                                 ;     290 End of function LCD_nibble_write
+                                 ;     291 ***********************************************************************************/   
+                                 ;     292 
+                                 ;     293 /*****************************************************************************
+                                 ;     294 Name:		DisplayDelay
+                                 ;     295 Description:   Delay routine for LCD display.
+                                 ;     296 Parameters:	units - Approximately in microseconds				   
+                                 ;     297 Returns:	none 
+                                 ;     298 *****************************************************************************/
+                                 ;     299 void DisplayDelay(unsigned long int units)
+                                 ;     300 {
+                                 ;     301 	unsigned long counter = units * DELAY_TIMING;
+                                 ;     302 	while (counter--)
+                                 ;     303 	{
+                                 ;     304 		nop();
+                                 ;     305 	}
+                                 ;     306 }
+                                 ;     307 /**********************************************************************************
+                                 ;     308 End of function DisplayDelay
+                                 ;     309 ***********************************************************************************/   
+                                 ;     310 #endif	//LCD2BY8
+                                 ;     311 
+                                 ;     312 /*****************************************************************************
+                                 ;     313 Name:          LcdShow2DigHex
+                                 ;     314 Parameters:    data, LCD-display line 1 or 2
+                                 ;     315 Returns:       -
+                                 ;     316 Description:   convert one byte to 2 ascii chars and show them.
+                                 ;     317 *****************************************************************************/
+                                 ;     318 void LcdShow2DigHex( uint8_t  data, uint8_t  position)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",318
+000000A0 6080                    		SUB #08H, R0
+000000A2 8189                    		MOV.B R1, 07H[R0]
+000000A4 8182                    		MOV.B R2, 06H[R0]
+                                 ;     319 {
+                                 ;     320 	uint8_t stringdata[3]; /* One char extra for trailing NULL. */
+                                 ;     321 
+                                 ;     322 	/* Convert data to string for LCD. */
+                                 ;     323 	IntToAsciiHex( stringdata, /* Pointer to where to put string */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",323
+000000A6 B18B                    		MOVU.B 07H[R0], R3
+000000A8 6622                    		MOV.L #00000002H, R2
+000000AA 710103                  		ADD #03H, R0, R1
+000000AD 39rrrr               W  		BSR _IntToAsciiHex
+000000B0                         L21:	; entry.split
+                                 ;     324 				   (uint8_t) 2, /* Nr characters output string will have */
+                                 ;     325 				   data ); /* uint32_t value */
+                                 ;     326 	
+                                 ;     327 	DisplayString(position, (uint8_t*)stringdata);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",327
+000000B0 B181                    		MOVU.B 06H[R0], R1
+000000B2 710203                  		ADD #03H, R0, R2
+000000B5 39rrrr               W  		BSR _DisplayString
+000000B8 6702                    		RTSD #08H
+000000BA                         _LcdShow4DigHex:
+                                 		.STACK	_LcdShow4DigHex=20
+                                 ;     328 }/* end LcdShow2DigHex() */
+                                 ;     329 
+                                 ;     330 /*****************************************************************************
+                                 ;     331 Name:          LcdShow4DigHex
+                                 ;     332 Parameters:    msbyte, lsbyte, LCD-display line 1 or 2
+                                 ;     333 Returns:       -
+                                 ;     334 Description:   Convert two bytes to 4 ascii characters and show them to LCD 
+                                 ;     335                at 5th position line 1 or 2.
+                                 ;     336 *****************************************************************************/
+                                 ;     337 void LcdShow4DigHex(	uint8_t  	msbyte,
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",337
+000000BA 7100F0                  		ADD #0FFFFFFF0H, R0
+000000BD 8389                    		MOV.B R1, 0FH[R0]
+000000BF 8382                    		MOV.B R2, 0EH[R0]
+000000C1 830B                    		MOV.B R3, 0DH[R0]
+                                 ;     338 						uint8_t  	lsbyte,
+                                 ;     339 						uint8_t	    position)
+                                 ;     340 {
+                                 ;     341 	uint32_t intdata;
+                                 ;     342 	uint8_t stringdata[FOUR_DIGITS_PLUS_NULL];
+                                 ;     343 
+                                 ;     344 	intdata = ((uint32_t) msbyte)<<8;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",344
+000000C3 B389                    		MOVU.B 0FH[R0], R1
+000000C5 6C81                    		SHLL #08H, R1
+000000C7 A081                    		MOV.L R1, 08H[R0]
+000000C9                         L23:	; entry.split
+                                 ;     345 	intdata = intdata + (uint32_t)lsbyte;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",345
+000000C9 A881                    		MOV.L 08H[R0], R1
+000000CB 49010E                  		ADD 0EH[R0].UB, R1
+000000CE A081                    		MOV.L R1, 08H[R0]
+000000D0                         L24:	; entry.split1
+                                 ;     346 
+                                 ;     347 	/* Convert data to string for LCD. */
+                                 ;     348 	IntToAsciiHex( 	stringdata, /* Pointer to where to put string */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",348
+000000D0 A883                    		MOV.L 08H[R0], R3
+000000D2 6642                    		MOV.L #00000004H, R2
+000000D4 710103                  		ADD #03H, R0, R1
+000000D7 39rrrr               W  		BSR _IntToAsciiHex
+000000DA                         L25:	; entry.split2
+                                 ;     349 				   	FOUR_DIGITS_PLUS_NULL-1, /* Nr characters output string will have */
+                                 ;     350 					intdata  ); /* Value */
+                                 ;     351 	
+                                 ;     352 	DisplayString(position, (uint8_t*)stringdata);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",352
+000000DA B309                    		MOVU.B 0DH[R0], R1
+000000DC 710203                  		ADD #03H, R0, R2
+000000DF 39rrrr               W  		BSR _DisplayString
+000000E2 6704                    		RTSD #10H
+000000E4                         _IntToAsciiHex:
+                                 		.STACK	_IntToAsciiHex=28
+                                 ;     353 }/* end LcdShow4DigHex() */
+                                 ;     354 
+                                 ;     355 /*****************************************************************************
+                                 ;     356 Name:		IntToAsciiHex   
+                                 ;     357 Parameters:	dest_string
+                                 ;     358 				Pointer to a buffer will the string will reside
+                                 ;     359 			min_digits
+                                 ;     360 				Specifies the number of characters the output string will
+                                 ;     361 				have. Leading zeros will be written as '0' characters.
+                                 ;     362 Returns:	A pointer to the string's NULL character in the string that was just
+                                 ;     363 				created.
+                                 ;     364 Does:		Converts a passed uint32_t into a ASCII	string represented in 
+                                 ;     365 				Hexidecimal format.
+                                 ;     366 *****************************************************************************/
+                                 ;     367 void IntToAsciiHex( uint8_t*    dest_string,
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",367
+000000E4 7100E8                  		ADD #0FFFFFFE8H, R0
+000000E7 A109                    		MOV.L R1, 14H[R0]
+000000E9 848A                    		MOV.B R2, 13H[R0]
+000000EB A08B                    		MOV.L R3, 0CH[R0]
+                                 ;     368 					uint8_t		min_digits, 
+                                 ;     369 					uint32_t 	value )
+                                 ;     370 {
+                                 ;     371 	uint32_t i, total_digits = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",371
+000000ED 3E0100                  		MOV.L #00000000H, 04H[R0]
+000000F0                         L27:	; entry.split
+                                 ;     372 	uint8_t  buff[4];
+                                 ;     373 	
+                                 ;     374 	for(i=0; i<4; i++)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",374
+000000F0 3E0200                  		MOV.L #00000000H, 08H[R0]
+000000F3 2Err                 B  		BRA L36
+000000F5                         L28:	; bb
+                                 ;     375 	{
+                                 ;     376 		buff[i] = (uint8_t)(value & 0x0F);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",376
+000000F5 A889                    		MOV.L 0CH[R0], R1
+000000F7 64F1                    		AND #0FH, R1
+000000F9 EF0E                    		MOV.L R0, R14
+000000FB A882                    		MOV.L 08H[R0], R2
+000000FD FE0E21                  		MOV.B R1, [R14,R2]
+00000100                         L29:	; bb.split
+                                 ;     377 		value = value >> 4;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",377
+00000100 A889                    		MOV.L 0CH[R0], R1
+00000102 6841                    		SHLR #04H, R1
+00000104 A089                    		MOV.L R1, 0CH[R0]
+00000106                         L30:	; bb.split1
+                                 ;     378 		if( buff[i] <= 9)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",378
+00000106 A881                    		MOV.L 08H[R0], R1
+00000108 EF0E                    		MOV.L R0, R14
+0000010A FECE1E                  		MOVU.B [R14,R1], R14
+0000010D 619E                    		CMP #09H, R14
+0000010F 2Arr                    		BGT L32
+00000111                         L31:	; if_then_bb
+00000111 EF0E                    		MOV.L R0, R14
+                                 ;     379 			buff[i] += '0';
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",379
+00000113 FEC1EF                  		MOVU.B [R1,R14], R15
+00000116 71FF30                  		ADD #30H, R15
+00000119 FE01EF                  		MOV.B R15, [R1,R14]
+0000011C 2Err                 B  		BRA L33
+0000011E                         L32:	; if_else_bb
+0000011E EF0E                    		MOV.L R0, R14
+                                 ;     380 		else
+                                 ;     381 			buff[i] = (uint8_t)(buff[i] - 0xA + 'A');
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",381
+00000120 A882                    		MOV.L 08H[R0], R2
+00000122 FECE2F                  		MOVU.B [R14,R2], R15
+00000125 71FF37                  		ADD #37H, R15
+00000128 FE01EF                  		MOV.B R15, [R1,R14]
+0000012B                         L33:	; if_break_bb
+                                 ;     382 
+                                 ;     383 		if(buff[i] != '0')
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",383
+0000012B A881                    		MOV.L 08H[R0], R1
+0000012D EF0E                    		MOV.L R0, R14
+0000012F FECE1E                  		MOVU.B [R14,R1], R14
+00000132 755E30                  		CMP #30H, R14
+00000135 10                   S  		BEQ L35
+00000136                         L34:	; if_then_bb47
+                                 ;     384 			total_digits = i+1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",384
+00000136 A881                    		MOV.L 08H[R0], R1
+00000138 6211                    		ADD #01H, R1
+0000013A A009                    		MOV.L R1, 04H[R0]
+0000013C                         L35:	; if_break_bb50
+0000013C A881                    		MOV.L 08H[R0], R1
+0000013E 6211                    		ADD #01H, R1
+00000140 A081                    		MOV.L R1, 08H[R0]
+00000142                         L36:	; bb53
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",374
+00000142 A881                    		MOV.L 08H[R0], R1
+00000144 6141                    		CMP #04H, R1
+00000146 23rr                    		BLTU L28
+00000148                         L37:	; bb58
+                                 ;     385 	}
+                                 ;     386 
+                                 ;     387 	if( total_digits < 	min_digits)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",387
+00000148 B489                    		MOVU.B 13H[R0], R1
+0000014A 06850101                		CMP 04H[R0].L, R1
+0000014E 25rr                    		BLEU L39
+00000150                         L38:	; if_then_bb65
+                                 ;     388 		total_digits = min_digits;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",388
+00000150 B489                    		MOVU.B 13H[R0], R1
+00000152 A009                    		MOV.L R1, 04H[R0]
+00000154                         L39:	; if_break_bb68
+                                 ;     389 
+                                 ;     390 	i = total_digits;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",390
+00000154 E5000102                		MOV.L 04H[R0], 08H[R0]
+00000158 2Err                 B  		BRA L42
+0000015A                         L40:	; bb70
+                                 ;     391 	while(i)
+                                 ;     392 	{
+                                 ;     393 		*dest_string++ = buff[i-1];
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",393
+0000015A A882                    		MOV.L 08H[R0], R2
+0000015C EF0E                    		MOV.L R0, R14
+0000015E 4BE2                    		ADD R14, R2
+00000160 FBE6FF                  		MOV.L #0FFFFFFFFH, R14
+00000163 FEC2EE                  		MOVU.B [R2,R14], R14
+00000166 C31E                    		MOV.B R14, [R1]
+00000168 A909                    		MOV.L 14H[R0], R1
+0000016A 6211                    		ADD #01H, R1
+0000016C A109                    		MOV.L R1, 14H[R0]
+0000016E                         L41:	; bb70.split
+                                 ;     394 		i--;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",394
+0000016E A881                    		MOV.L 08H[R0], R1
+00000170 6011                    		SUB #01H, R1
+00000172 A081                    		MOV.L R1, 08H[R0]
+00000174                         L42:	; bb81
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",391
+00000174 A881                    		MOV.L 08H[R0], R1
+00000176 6101                    		CMP #00H, R1
+00000178 A909                    		MOV.L 14H[R0], R1
+0000017A 21rr                    		BNE L40
+0000017C                         L43:	; bb86
+                                 ;     395 	}
+                                 ;     396 
+                                 ;     397 	*dest_string = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\lcd.c",397
+0000017C F81400                  		MOV.B #00H, [R1]
+0000017F 6706                    		RTSD #18H
+                                 ;     398 }/* end IntToAsciiHex() */
+                                 ;     399 /* eof */
+                                 		.SECTION	B,DATA,ALIGN=4
+00000000                         _G_lcd:
+00000000(00000004H)              		.blkl	1
+                                 		.END
+
+Information List
+
+TOTAL ERROR(S)    00000
+TOTAL WARNING(S)  00000
+TOTAL LINE(S)     00677   LINES
+
+Section List
+
+Attr         Size               Name
+CODE     0000000385(00000181H)  P
+DATA     0000000004(00000004H)  B
+
+Cpu Type
+
+-CPU=RX600
+
+Command Parameter
+
+-subcommand=C:\Users\fpolo\AppData\Local\Temp\$ccrx9AE9F2\$ccrx\lcd.src.cmd
+    -nologo
+    -cpu=rx600
+    -fpu
+    -fint_register=0
+    -debug
+    -endian=little
+-listfile=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\lcd.lst
+-output=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\lcd.obj

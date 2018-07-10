@@ -1,0 +1,2114 @@
+* RX FAMILY ASSEMBLER V2.08.00.01 [06 Oct 2017] *  SOURCE LIST  Fri Jul 06 09:06:33 2018
+
+LOC.     OBJ.              0XMDA SOURCE STATEMENT
+
+                                 ;RX Family C/C++ Compiler (V2.08.00 [30 Nov 2017])  06-Jul-2018 09:06:33
+                                 
+                                 ;*** CPU TYPE ***
+                                 
+                                 ;-CPU=RX600
+                                 
+                                 ;*** COMMAND PARAMETER ***
+                                 
+                                 ;-output=src=api_demo.src
+                                 ;-cpu=rx600
+                                 ;-fpu
+                                 ;-include=C:\PROGRA~2\RENESA~1\CS_~1\CC\CC-RX\V208~1.00\include,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2
+                                 ;-define=NOT_DEBUG=1
+                                 ;-lang=c99
+                                 ;-nomessage
+                                 ;-change_message=information
+                                 ;-obj_path=src
+                                 ;-debug
+                                 ;-listfile=src/api_demo.lst
+                                 ;-show=source
+                                 ;-optimize=0
+                                 ;-speed
+                                 ;-nologo
+                                 ;api_demo.c
+                                 
+                                 		.glb	_tx_dataframe
+                                 		.glb	_rx_dataframe
+                                 		.glb	_remote_frame
+                                 		.glb	_g_tx_id_default
+                                 		.glb	_g_rx_id_default
+                                 		.glb	_can0_tx_sentdata_flag
+                                 		.glb	_can0_tx_remote_sentdata_flag
+                                 		.glb	_can0_rx_newdata_flag
+                                 		.glb	_can0_rx_test_newdata_flag
+                                 		.glb	_can0_rx_remote_frame_flag
+                                 		.glb	_app_err_nr
+                                 		.glb	_main
+                                 		.glb	_HardwareSetup
+                                 		.glb	_InitialiseDisplay
+                                 		.glb	_DisplayString
+                                 		.glb	_R_CAN_Create
+                                 		.glb	_R_CAN_PortSet
+                                 		.glb	_R_CAN_TxSet
+                                 		.glb	_R_CAN_Tx
+                                 		.glb	_ReadSwitches
+                                 		.glb	_LcdShow4DigHex
+                                 		.glb	_R_CAN_RxRead
+                                 		.glb	_R_CAN_Control
+                                 		.glb	_R_CAN_RxSet
+                                 		.glb	_R_CAN_RxSetMask
+                                 		.glb	_LcdShow2DigHex
+                                 		.glb	_R_CAN_CheckErr
+                                 		.glb	_ResetAllErrors
+                                 		.glb	_Delay
+                                 		.glb	_CAN0_TXM0_ISR
+                                 		.glb	_R_CAN_TxCheck
+                                 		.glb	_CAN0_RXM0_ISR
+                                 		.glb	_R_CAN_RxPoll
+                                 		.glb	_CAN0_ERS0_ISR
+                                 ;LineNo. C-SOURCE STATEMENT
+                                 
+                                 		.SECTION	P,CODE
+00000000                         _main:
+                                 		.STACK	_main=16
+                                 ;       1 /******************************************************************************
+                                 ;       2 * DISCLAIMER
+                                 ;       3 
+                                 ;       4 * This software is supplied by Renesas Electronics Corp. and is only 
+                                 ;       5 * intended for use with Renesas products. No other uses are authorized.
+                                 ;       6 
+                                 ;       7 * This software is owned by Renesas Electronics Corp. and is protected under 
+                                 ;       8 * all applicable laws, including copyright laws.
+                                 ;       9 
+                                 ;      10 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES 
+                                 ;      11 * REGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, 
+                                 ;      12 * INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+                                 ;      13 * PARTICULAR PURPOSE AND NON-INFRINGEMENT.	ALL SUCH WARRANTIES ARE EXPRESSLY 
+                                 ;      14 * DISCLAIMED.
+                                 ;      15 
+                                 ;      16 * TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS 
+                                 ;      17 * ELECTRONICS CORP. NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+                                 ;      18 * FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES 
+                                 ;      19 * FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR ITS 
+                                 ;      20 * AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+                                 ;      21 
+                                 ;      22 * Renesas reserves the right, without notice, to make changes to this 
+                                 ;      23 * software and to discontinue the availability of this software.	
+                                 ;      24 * By using this software, you agree to the additional terms and 
+                                 ;      25 * conditions found by accessing the following link:
+                                 ;      26 * http://www.renesas.com/disclaimer
+                                 ;      27 ******************************************************************************
+                                 ;      28 * Copyright (C) 2017. Renesas Electronics Corp., All Rights Reserved.
+                                 ;      29 ******************************************************************************
+                                 ;      30 * File Name		API_DEMO.C
+                                 ;      31 * Version		2.05
+                                 ;      32 * Tool-Chain	RX Standard Toolchain 2.0.7
+                                 ;      33 * Platform		ROK5562N0C.
+                                 ;      34 * Description	Demo application program
+                                 ;      35 
+                                 ;      36 				CAN Buadrate: 500 kbps.
+                                 ;      37 
+                                 ;      38 				Demonstration of CAN receive and transmit using the CAN API.
+                                 ;      39 				
+                                 ;      40 				The demo can be run in three ways:
+                                 ;      41 				1) Program two boards and connect them together over the CAN 
+                                 ;      42 					bus.
+                                 ;      43 				2) With CANPORT_TEST_1_INT_LOOPBACK used in the R_CAN_PortSet
+                                 ;      44 					API you can communicate internally, no external bus needed!
+                                 ;      45 				3) Use a CAN bus monitor, e.g. SysTec's low-cost monitor 
+                                 ;      46 					3204000, to send and receive frames to/from the demo. 
+                                 ;      47 					Remote frames can also be demonstrated if CAN interrupts 
+                                 ;      48 					are enabled. See last paragraph below.
+                                 ;      49 
+                                 ;      50 				OPERATION:
+                                 ;      51 				The demo transmits and receives frames with CAN-ID 1 for standard
+                                 ;      52                 ID mode, or 0x000A0001 for extended or mixed ID mode by 
+                                 ;      53 				default. The default demo CAN-ID value is set in main().
+                                 ;      54 				
+                                 ;      55 				The software starts up by immediately sending ten test frames. 
+                                 ;      56 				This has two purposes, to check the link and to demonstrate 
+                                 ;      57 				how messages are sent back-to-back as quickly as possible.
+                                 ;      58 				
+                                 ;      59 				Press SW1 to send one CAN frame. The frame will be received 
+                                 ;      60 				and displayed by the other RSK as long as that board's receive
+                                 ;      61 				ID (RxID) matches the sending boards transmit ID (TxID).
+                                 ;      62 				
+                                 ;      63 				Press SW2 to display the current demo TxID on the LCD. To inc-
+                                 ;      64 				rement the TxID hold SW2 down and press SW3. The actual send 
+                                 ;      65 				command is invoked by the Sw1Func function.
+                                 ;      66 
+                                 ;      67 				Press SW3 to display current demo RxID on the LCD. To change 
+                                 ;      68 				RxID hold SW3 down and press SW2.
+                                 ;      69 
+                                 ;      70 				By default, polled CAN is used. To use the CAN interrupts for 
+                                 ;      71 				faster processing, uncomment USE_CAN_POLL in file 
+                                 ;      72 				config_r_can_rapi.h.
+                                 ;      73 
+                                 ;      74 				REMOTE frames:
+                                 ;      75 				Besides demonstrating Tx and Rx of Standard CAN frames, the 
+                                 ;      76 				demo will also send remote frame responses for CAN-ID 50h 
+                                 ;      77 				remote frame requests. Remote frames demo is only done in 
+                                 ;      78 				interrupt mode; with USE_CAN_POLL commented in the CAN API 
+                                 ;      79 				config file. Remote requests are not sent by this demo as it 
+                                 ;      80 				is, and so must come from an outside source, e.g. the CAN 
+                                 ;      81 				monitor mentioned above.
+                                 ;      82 				
+                                 ;      83 * Limitations	-
+                                 ;      84 ******************************************************************************
+                                 ;      85 * History
+                                 ;      86 * Mar 22 '10	RTA-CSS		For RX62N with new CAN API on 62N Eval Board.
+                                 ;      87 * Apr 15 '10	RTA-CSS		Improvements when using R_CAN_PortSet test modes.
+                                 ;      88 * Jul 13 '10	RTA-CSS		For RDK.
+                                 ;      89 * 12.14.2017  2.05        Version update
+                                 ;      90 *******************************************************************************/
+                                 ;      91 //Set TAB = 4 spaces
+                                 ;      92 
+                                 ;      93 /******************************************************************************
+                                 ;      94 Includes	<System Includes> , "Project Includes"
+                                 ;      95 ******************************************************************************/
+                                 ;      96 #include <machine.h>
+                                 ;      97 #include "hwsetup.h"
+                                 ;      98 #include "api_demo.h"
+                                 ;      99 #include "r_can_api.h"
+                                 ;     100 #include "config_r_can_rapi.h"
+                                 ;     101 #include "lcd.h"
+                                 ;     102 #include <stdint.h>
+                                 ;     103 #include "switches.h"
+                                 ;     104 #include "rdkrx62n.h"
+                                 ;     105 
+                                 ;     106 /******************************************************************************
+                                 ;     107 Typedef definitions
+                                 ;     108 ******************************************************************************/
+                                 ;     109 /******************************************************************************
+                                 ;     110 Macro definitions
+                                 ;     111 ******************************************************************************/
+                                 ;     112 #define LED_DELAY				0x00080000
+                                 ;     113 #define NR_STARTUP_TEST_FRAMES	10
+                                 ;     114 
+                                 ;     115 #define MAX_CHANNELS 2 /* Some parts have moe than one channel. */
+                                 ;     116 
+                                 ;     117 /******************************************************************************
+                                 ;     118 Global variables and functions imported (externs)
+                                 ;     119 ******************************************************************************/
+                                 ;     120 /* Data */
+                                 ;     121 /* Functions */
+                                 ;     122 /******************************************************************************
+                                 ;     123 Constant definitions
+                                 ;     124 *****************************************************************************/
+                                 ;     125 /******************************************************************************
+                                 ;     126 Global variables and functions exported
+                                 ;     127 ******************************************************************************/
+                                 ;     128 /* Demo data */
+                                 ;     129 can_frame_t		tx_dataframe, rx_dataframe, remote_frame;
+                                 ;     130 
+                                 ;     131 /* TEST CAN ID */
+                                 ;     132 uint32_t g_tx_id_default;
+                                 ;     133 uint32_t g_rx_id_default;
+                                 ;     134 
+                                 ;     135 
+                                 ;     136 /* Demo flags. */
+                                 ;     137 #ifndef USE_CAN_POLL
+                                 ;     138 uint32_t			can0_tx_sentdata_flag = 0;
+                                 ;     139 uint32_t			can0_tx_remote_sentdata_flag = 0;
+                                 ;     140 uint32_t			can0_rx_newdata_flag = 0;
+                                 ;     141 uint32_t			can0_rx_test_newdata_flag = 0;
+                                 ;     142 uint32_t			can0_rx_remote_frame_flag = 0;
+                                 ;     143 #endif //USE_CAN_POLL
+                                 ;     144 enum app_err_enum	app_err_nr;
+                                 ;     145 
+                                 ;     146 /* Functions */
+                                 ;     147 
+                                 ;     148 /******************************************************************************
+                                 ;     149 Global variables and functions private to the file
+                                 ;     150 ******************************************************************************/
+                                 ;     151 /* Data */
+                                 ;     152 /* Errors. Peripheral and bus errors. Prepared for two buses, but only one in RX62N. */
+                                 ;     153 static uint32_t		error_bus_status[2] = {R_CAN_STATUS_ERROR_ACTIVE, R_CAN_STATUS_ERROR_ACTIVE}; 
+                                 ;     154 static uint32_t     error_bus_status_prev[2] = {R_CAN_STATUS_ERROR_ACTIVE, R_CAN_STATUS_ERROR_ACTIVE}; 
+                                 ;     155 static uint32_t		can_state[MAX_CHANNELS];
+                                 ;     156 static uint32_t		nr_times_reached_busoff[MAX_CHANNELS];
+                                 ;     157 
+                                 ;     158 /* Functions */
+                                 ;     159 static uint32_t InitCanApp(void);
+                                 ;     160 static void CheckCANerrors(void);
+                                 ;     161 static void HandleCanBusState(uint8_t ch_nr);
+                                 ;     162 static void TestLEDs(uint32_t nr_led_flashes);
+                                 ;     163 
+                                 ;     164 #ifdef USE_CAN_POLL
+                                 ;     165 static void CanPollDemo(void);
+                                 ;     166 #else 
+                                 ;     167 static void CanIntDemo(void);
+                                 ;     168 #endif //USE_CAN_POLL
+                                 ;     169 
+                                 ;     170 /**********************************************************************************
+                                 ;     171 User Program Code
+                                 ;     172 ***********************************************************************************/
+                                 ;     173 /*****************************************************************************
+                                 ;     174 Name		: main
+                                 ;     175 Parameters : none
+                                 ;     176 Returns	 : nothing
+                                 ;     177 Description: Main Can D-Kit demo program
+                                 ;     178 *****************************************************************************/
+                                 ;     179 void main(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",179
+00000000 7EA6                    		PUSH.L R6
+00000002 6080                    		SUB #08H, R0
+                                 ;     180 {
+                                 ;     181 	uint32_t i, api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",181
+00000004 F80600                  		MOV.L #00000000H, [R0]
+00000007                         L28:	; entry.split
+                                 ;     182 	
+                                 ;     183 	/* Configure MCU for 100MHz CPU Clock, ports, peripherals,... */
+                                 ;     184 	HardwareSetup();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",184
+00000007 05rrrrrr             A  		BSR _HardwareSetup
+0000000B                         L29:	; entry.split1
+                                 ;     185 	
+                                 ;     186 	/* Setup LCD. */
+                                 ;     187 	InitialiseDisplay();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",187
+0000000B 05rrrrrr             A  		BSR _InitialiseDisplay
+0000000F                         L30:	; entry.split2
+                                 ;     188 	DisplayString(LCD_LINE1, "RX62N ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",188
+0000000F FB22rrrrrrrr            		MOV.L #_L10, R2
+00000015 6601                    		MOV.L #00000000H, R1
+00000017 05rrrrrr             A  		BSR _DisplayString
+0000001B                         L31:	; entry.split3
+                                 ;     189 	DisplayString(LCD_LINE2, "Simple");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",189
+0000001B FB22rrrrrrrr            		MOV.L #_L11, R2
+00000021 754110                  		MOV.L #00000010H, R1
+00000024 05rrrrrr             A  		BSR _DisplayString
+00000028                         L32:	; entry.split4
+                                 ;     190 	DisplayString(LCD_LINE3, "TxRx");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",190
+00000028 FB22rrrrrrrr            		MOV.L #_L12, R2
+0000002E 754118                  		MOV.L #00000018H, R1
+00000031 05rrrrrr             A  		BSR _DisplayString
+00000035                         L33:	; entry.split5
+                                 ;     191 	DisplayString(LCD_LINE4, "CAN Demo");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",191
+00000035 FB22rrrrrrrr            		MOV.L #_L13, R2
+0000003B 754120                  		MOV.L #00000020H, R1
+0000003E 05rrrrrr             A  		BSR _DisplayString
+00000042                         L34:	; entry.split6
+00000042 754114                  		MOV.L #00000014H, R1
+                                 ;     192 	
+                                 ;     193 	/* Blink LEDs. */
+                                 ;     194 	TestLEDs(20);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",194
+00000045 39rrrr               W  		BSR __$TestLEDs
+00000048                         L35:	; entry.split8
+                                 ;     195 
+                                 ;     196     /* Set starting mailbox IDs for the demo*/
+                                 ;     197     if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     198     {
+                                 ;     199         g_tx_id_default = 0x001;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",199
+00000048 FBE2rrrrrrrr            		MOV.L #_g_tx_id_default, R14
+0000004E F8E601                  		MOV.L #00000001H, [R14]
+00000051                         L36:	; entry.split9
+                                 ;     200         g_rx_id_default = 0x001;    
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",200
+00000051 FBE2rrrrrrrr            		MOV.L #_g_rx_id_default, R14
+00000057 F8E601                  		MOV.L #00000001H, [R14]
+0000005A                         L37:	; entry.split10
+0000005A 6601                    		MOV.L #00000000H, R1
+                                 ;     201     }
+                                 ;     202     else
+                                 ;     203     {
+                                 ;     204         g_tx_id_default = 0x000A0001;
+                                 ;     205         g_rx_id_default = 0x000A0001;
+                                 ;     206     }
+                                 ;     207 
+                                 ;     208 	/* Init CAN. */
+                                 ;     209 	api_status = R_CAN_Create(0);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",209
+0000005C 05rrrrrr             A  		BSR _R_CAN_Create
+00000060 E301                    		MOV.L R1, [R0]
+00000062                         L38:	; entry.split11
+00000062 6612                    		MOV.L #00000001H, R2
+00000064 6601                    		MOV.L #00000000H, R1
+                                 ;     210 						
+                                 ;     211 	/*********************************
+                                 ;     212 	* Pick ONE R_CAN_PortSet call below!	*
+                                 ;     213 	**********************************/
+                                 ;     214 	/* Normal CAN bus usage. */
+                                 ;     215 	R_CAN_PortSet(0, ENABLE);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",215
+00000066 05rrrrrr             A  		BSR _R_CAN_PortSet
+0000006A                         L39:	; entry.split12
+                                 ;     216 	/* Test modes. With Internal loopback mode you only need one board! */
+                                 ;     217 	//R_CAN_PortSet(0, CANPORT_TEST_1_INT_LOOPBACK);
+                                 ;     218 	//R_CAN_PortSet(0, CANPORT_TEST_0_EXT_LOOPBACK);
+                                 ;     219 	//R_CAN_PortSet(0, CANPORT_TEST_LISTEN_ONLY);
+                                 ;     220 	
+                                 ;     221 	/* Init CAN mailboxes. */
+                                 ;     222 	api_status |= InitCanApp();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",222
+0000006A 39rrrr               W  		BSR __$InitCanApp
+0000006D EC02                    		MOV.L [R0], R2
+0000006F 5712                    		OR R1, R2
+00000071 E302                    		MOV.L R2, [R0]
+00000073                         L40:	; entry.split13
+                                 ;     223 	
+                                 ;     224 	/* Is all OK after all CAN initialization? */
+                                 ;     225 	if (api_status != R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",225
+00000073 EC01                    		MOV.L [R0], R1
+00000075 6101                    		CMP #00H, R1
+00000077 20rr                    		BEQ L43
+00000079                         L41:	; if_then_bb10
+                                 ;     226 	{
+                                 ;     227 		api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",227
+00000079 F80600                  		MOV.L #00000000H, [R0]
+0000007C                         L42:	; if_then_bb10.split
+                                 ;     228 		app_err_nr = APP_ERR_CAN_INIT;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",228
+0000007C FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+00000082 F8E602                  		MOV.L #00000002H, [R14]
+00000085                         L43:	; if_then_bb12.split
+                                 ;     229 	}
+                                 ;     230 	
+                                 ;     231 	/* Interrupt Enable flag is set by default. */
+                                 ;     232 	
+                                 ;     233 	/* Send several test messages back to back. */
+                                 ;     234     if (FRAME_ID_MODE == STD_ID_MODE )
+                                 ;     235     {
+                                 ;     236 	    api_status |= R_CAN_TxSet(0, CANBOX_TX, &tx_dataframe, DATA_FRAME);   
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",236
+00000085 FB32rrrrrrrr            		MOV.L #_tx_dataframe, R3
+0000008B 6612                    		MOV.L #00000001H, R2
+0000008D 6601                    		MOV.L #00000000H, R1
+0000008F EF14                    		MOV.L R1, R4
+00000091 05rrrrrr             A  		BSR _R_CAN_TxSet
+00000095 EC02                    		MOV.L [R0], R2
+00000097 5712                    		OR R1, R2
+00000099 E302                    		MOV.L R2, [R0]
+0000009B                         L44:	; bb21
+                                 ;     237     }
+                                 ;     238     else
+                                 ;     239     {
+                                 ;     240 	    api_status |= R_CAN_TxSetXid(0, CANBOX_TX, &tx_dataframe, DATA_FRAME);
+                                 ;     241     }
+                                 ;     242     
+                                 ;     243 	#ifdef USE_CAN_POLL
+                                 ;     244 		while (R_CAN_TxCheck(0, CANBOX_TX))
+                                 ;     245 			;
+                                 ;     246 		for (i = 0; i < NR_STARTUP_TEST_FRAMES; i++)
+                                 ;     247 		{
+                                 ;     248 			api_status |= R_CAN_Tx(0, CANBOX_TX);
+                                 ;     249 			while (R_CAN_TxCheck(0, CANBOX_TX))
+                                 ;     250 				;
+                                 ;     251 		}
+                                 ;     252 	#else	//Using CAN interrupts.
+                                 ;     253 		while (can0_tx_sentdata_flag == 0)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",253
+0000009B FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+000000A1 ECEE                    		MOV.L [R14], R14
+000000A3 610E                    		CMP #00H, R14
+000000A5 20rr                    		BEQ L44
+000000A7                         L45:	; bb26
+                                 ;     254 			;
+                                 ;     255 		can0_tx_sentdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",255
+000000A7 FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+000000AD F8E600                  		MOV.L #00000000H, [R14]
+000000B0                         L46:	; bb26.split
+                                 ;     256 		for (i = 0; i < NR_STARTUP_TEST_FRAMES; i++)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",256
+000000B0 3E0100                  		MOV.L #00000000H, 04H[R0]
+000000B3 2Err                 B  		BRA L50
+000000B5                         L47:	; bb27
+000000B5 6612                    		MOV.L #00000001H, R2
+000000B7 6601                    		MOV.L #00000000H, R1
+                                 ;     257 		{
+                                 ;     258 			api_status |= R_CAN_Tx(0, CANBOX_TX);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",258
+000000B9 05rrrrrr             A  		BSR _R_CAN_Tx
+000000BD EC02                    		MOV.L [R0], R2
+000000BF 5712                    		OR R1, R2
+000000C1 E302                    		MOV.L R2, [R0]
+000000C3                         L48:	; bb32
+                                 ;     259 			while (can0_tx_sentdata_flag == 0)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",259
+000000C3 FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+000000C9 ECEE                    		MOV.L [R14], R14
+000000CB 610E                    		CMP #00H, R14
+000000CD 20rr                    		BEQ L48
+000000CF                         L49:	; bb37
+                                 ;     260 				;
+                                 ;     261 			can0_tx_sentdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",261
+000000CF FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+000000D5 F8E600                  		MOV.L #00000000H, [R14]
+000000D8 A809                    		MOV.L 04H[R0], R1
+000000DA 6211                    		ADD #01H, R1
+000000DC A009                    		MOV.L R1, 04H[R0]
+000000DE                         L50:	; bb40
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",256
+000000DE A809                    		MOV.L 04H[R0], R1
+000000E0 61A1                    		CMP #0AH, R1
+000000E2 23rr                    		BLTU L47
+000000E4 2Err                 B  		BRA L57
+000000E6                         L51:	; if_then_bb51
+                                 ;     262 		}
+                                 ;     263 	#endif
+                                 ;     264 	
+                                 ;     265 	/*	M A I N	L O O P	* * * * * * * * * * * * * * * * * * * * * * * * * */	
+                                 ;     266 	while(1)
+                                 ;     267 	{
+                                 ;     268 		/* User pressing switch(es)? */
+                                 ;     269 		ReadSwitches();
+                                 ;     270 
+                                 ;     271 		/* Check for CAN errors. */
+                                 ;     272 		 CheckCANerrors();
+                                 ;     273             
+                                 ;     274 		if (can_state[0] != R_CAN_STATUS_BUSOFF)
+                                 ;     275 		{
+                                 ;     276 			#ifdef USE_CAN_POLL
+                                 ;     277 				CanPollDemo();
+                                 ;     278 			#else
+                                 ;     279 				CanIntDemo();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",279
+000000E6 39rrrr               W  		BSR __$CanIntDemo
+000000E9 2Err                 B  		BRA L55
+000000EB                         L52:	; if_else_bb52
+                                 ;     280 			#endif //USE_CAN_POLL
+                                 ;     281 		}
+                                 ;     282 		 else
+                                 ;     283 		/* Bus Off. */
+                                 ;     284 		{
+                                 ;     285 			DisplayString(LCD_LINE1, "App in	");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",285
+000000EB FB22rrrrrrrr            		MOV.L #_L14, R2
+000000F1 6601                    		MOV.L #00000000H, R1
+000000F3 05rrrrrr             A  		BSR _DisplayString
+000000F7                         L53:	; if_else_bb52.split
+                                 ;     286 			DisplayString(LCD_LINE2, "Bus Off ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",286
+000000F7 FB22rrrrrrrr            		MOV.L #_L15, R2
+000000FD 754110                  		MOV.L #00000010H, R1
+00000100 05rrrrrr             A  		BSR _DisplayString
+00000104                         L54:	; if_else_bb52.split14
+00000104 FB1E000040              		MOV.L #00400000H, R1
+                                 ;     287 			
+                                 ;     288 			/* HandleCanBusState() will restart app. */
+                                 ;     289 			LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",289
+00000109 39rrrr               W  		BSR _Delay
+0000010C FB62rrrrrrrr            		MOV.L #_L16, R6
+00000112 6601                    		MOV.L #00000000H, R1
+00000114 EF62                    		MOV.L R6, R2
+00000116 05rrrrrr             A  		BSR _DisplayString
+0000011A 754110                  		MOV.L #00000010H, R1
+0000011D EF62                    		MOV.L R6, R2
+0000011F 05rrrrrr             A  		BSR _DisplayString
+00000123 FB1A0020                		MOV.L #00002000H, R1
+00000127 39rrrr               W  		BSR _Delay
+0000012A                         L55:	; if_break_bb53
+0000012A FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     290 		}
+                                 ;     291 		/* Reset receive/transmit indication. */
+                                 ;     292 		LED2 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",292
+0000012F F0E9                    		BCLR #01H, [R14].B
+00000131                         L56:	; if_break_bb53.split
+00000131 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     293 		LED1 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",293
+00000136 F0E8                    		BCLR #00H, [R14].B
+00000138                         L57:	; bb54.split
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",269
+00000138 05rrrrrr             A  		BSR _ReadSwitches
+0000013C                         L58:	; bb54.split15
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",272
+0000013C 39rrrr               W  		BSR __$CheckCANerrors
+0000013F                         L59:	; bb54.split16
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",274
+0000013F FBE2rrrrrrrr            		MOV.L #__$can_state, R14
+00000145 ECEE                    		MOV.L [R14], R14
+00000147 614E                    		CMP #04H, R14
+00000149 21rr                    		BNE L51
+0000014B 2Err                 B  		BRA L52
+0000014D                         __$CanIntDemo:
+                                 		.STACK	__$CanIntDemo=16
+                                 ;     294 	}
+                                 ;     295 }/* end main() */
+                                 ;     296 
+                                 ;     297 #ifdef USE_CAN_POLL
+                                 ;     298 /*****************************************************************************
+                                 ;     299 Name:			CanPollDemo
+                                 ;     300 Parameters:		-
+                                 ;     301 Returns:		-
+                                 ;     302 Description:	POLLED CAN demo version
+                                 ;     303 *****************************************************************************/
+                                 ;     304 static void CanPollDemo(void)
+                                 ;     305 {
+                                 ;     306 	uint32_t	api_status = R_CAN_OK;
+                                 ;     307 	
+                                 ;     308 	/*** TRANSMITTED any frames? */
+                                 ;     309 	api_status = R_CAN_TxCheck(0, CANBOX_TX);
+                                 ;     310 	if (api_status == R_CAN_OK)
+                                 ;     311 	{
+                                 ;     312 		LED2 = LED_ON;
+                                 ;     313 		DisplayString(LCD_LINE1, "TxChk OK");
+                                 ;     314 		LcdShow4DigHex(tx_dataframe.data[0], tx_dataframe.data[1], 16);
+                                 ;     315 		LcdShow4DigHex(tx_dataframe.data[2], tx_dataframe.data[3], 20); LCD_FLASH
+                                 ;     316 	} /* 
+                                 ;     317     else
+                                 ;     318     {
+                                 ;     319         Since we are always polling for transmits, api_status for R_CAN_TxCheck 
+                                 ;     320 	    will most often be other than R_CAN_OK, don't show that in this demo.
+                                 ;     321     }*/
+                                 ;     322 	
+                                 ;     323 	#if TEST_FIFO
+                                 ;     324 	if (tx_fifo_flag == 1)
+                                 ;     325     /* Note that this function may be called to fast from the time between 
+                                 ;     326     SW1 being executed, and the time this if statement is run. This means that the CAN frames 
+                                 ;     327     have not gone out yet, and so TxCheck will not be OK. */
+                                 ;     328     {
+                                 ;     329         tx_fifo_flag = 0;
+                                 ;     330         api_status = R_CAN_TxCheck(0, TX_FIFO_MBX);
+                                 ;     331 		if (api_status == R_CAN_OK)
+                                 ;     332 		{
+                                 ;     333             /* $REA FIX - Never gets here. */
+                                 ;     334             LED2 = LED_ON;
+                                 ;     335 			DisplayString(LCD_LINE1, "TxFifoOK");
+                                 ;     336 			LcdShow4DigHex(tx_dataframe.data[0], tx_dataframe.data[1], 16);
+                                 ;     337 			LcdShow4DigHex(tx_dataframe.data[2], tx_dataframe.data[3], 20); LCD_FLASH
+                                 ;     338 	    }
+                                 ;     339         else
+                                 ;     340             DisplayString(LCD_LINE1, "TxFifoNo");
+                                 ;     341     }
+                                 ;     342 	#endif
+                                 ;     343 	
+                                 ;     344 	/*** RECEIVED any frames? */
+                                 ;     345 	api_status = R_CAN_RxPoll(0, CANBOX_RX);
+                                 ;     346 	if (api_status == R_CAN_OK)
+                                 ;     347 	{
+                                 ;     348 		LED1 = LED_ON;
+                                 ;     349 		DisplayString(LCD_LINE1, "RxPollOK"); LCD_FLASH
+                                 ;     350 		DisplayString(LCD_LINE1, "RxRead: ");
+                                 ;     351 		
+                                 ;     352 		/* Read CAN data and show. */
+                                 ;     353 		api_status = R_CAN_RxRead(0, CANBOX_RX, &rx_dataframe);
+                                 ;     354 		LcdShow4DigHex(rx_dataframe.data[0], rx_dataframe.data[1], 16);
+                                 ;     355 		LcdShow4DigHex(rx_dataframe.data[2], rx_dataframe.data[3], 20); LCD_FLASH
+                                 ;     356 		if (api_status == R_CAN_MSGLOST)
+                                 ;     357 		{
+                                 ;     358 			DisplayString(LCD_LINE2, "MSGLOST"); LCD_FLASH
+                                 ;     359 		}
+                                 ;     360 	}
+                                 ;     361 }/* end CanPollDemo() */
+                                 ;     362 
+                                 ;     363 #else
+                                 ;     364 
+                                 ;     365 /*****************************************************************************
+                                 ;     366 Name:			CanIntDemo
+                                 ;     367 Parameters:		-
+                                 ;     368 Returns:		-
+                                 ;     369 Description:	INTERRUPT driven CAN demo version
+                                 ;     370 *****************************************************************************/
+                                 ;     371 static void CanIntDemo(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",371
+0000014D 6E67                    		PUSHM R6-R7
+0000014F 6040                    		SUB #04H, R0
+                                 ;     372 {
+                                 ;     373 	uint32_t	api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",373
+00000151 F80600                  		MOV.L #00000000H, [R0]
+00000154                         L61:	; entry.split
+                                 ;     374 	
+                                 ;     375 	/************************************************************************
+                                 ;     376 	* Using CAN INTERRUPTS.													*
+                                 ;     377 	* See also r_can_api.c for the ISR example.								*
+                                 ;     378 	*************************************************************************/
+                                 ;     379 	/* TRANSMITTED any frames? If flag can0_tx_sentdata_flag was set by the 
+                                 ;     380     CAN Tx ISR, the frame was sent successfully. */
+                                 ;     381     if (can0_tx_sentdata_flag)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",381
+00000154 FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+0000015A ECEE                    		MOV.L [R14], R14
+0000015C 610E                    		CMP #00H, R14
+0000015E 20rr                    		BEQ L67
+00000160                         L62:	; if_then_bb
+                                 ;     382 	{
+                                 ;     383 		can0_tx_sentdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",383
+00000160 FBE2rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R14
+00000166 F8E600                  		MOV.L #00000000H, [R14]
+00000169                         L63:	; if_then_bb.split
+00000169 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     384 		LED2 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",384
+0000016E F0E1                    		BSET #01H, [R14].B
+00000170                         L64:	; if_then_bb.split1
+                                 ;     385 
+                                 ;     386    		/* Show CAN frame was sent. */
+                                 ;     387    		DisplayString(LCD_LINE1, "Tx OK    ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",387
+00000170 FB22rrrrrrrr            		MOV.L #_L17, R2
+00000176 6601                    		MOV.L #00000000H, R1
+00000178 05rrrrrr             A  		BSR _DisplayString
+0000017C                         L65:	; if_then_bb.split2
+                                 ;     388    		LcdShow4DigHex(tx_dataframe.data[0], tx_dataframe.data[1], 16);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",388
+0000017C FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+00000182 B192                    		MOVU.B 06H[R1], R2
+00000184 B119                    		MOVU.B 05H[R1], R1
+00000186 754310                  		MOV.L #00000010H, R3
+00000189 05rrrrrr             A  		BSR _LcdShow4DigHex
+0000018D                         L66:	; if_then_bb.split3
+                                 ;     389    		LcdShow4DigHex(tx_dataframe.data[2], tx_dataframe.data[3], 20); LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",389
+0000018D FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+00000193 B212                    		MOVU.B 08H[R1], R2
+00000195 B199                    		MOVU.B 07H[R1], R1
+00000197 754314                  		MOV.L #00000014H, R3
+0000019A 05rrrrrr             A  		BSR _LcdShow4DigHex
+0000019E FB1E000040              		MOV.L #00400000H, R1
+000001A3 39rrrr               W  		BSR _Delay
+000001A6 FB62rrrrrrrr            		MOV.L #_L16, R6
+000001AC 6601                    		MOV.L #00000000H, R1
+000001AE EF62                    		MOV.L R6, R2
+000001B0 05rrrrrr             A  		BSR _DisplayString
+000001B4 754110                  		MOV.L #00000010H, R1
+000001B7 EF62                    		MOV.L R6, R2
+000001B9 05rrrrrr             A  		BSR _DisplayString
+000001BD FB1A0020                		MOV.L #00002000H, R1
+000001C1 39rrrr               W  		BSR _Delay
+000001C4                         L67:	; if_break_bb
+                                 ;     390     }
+                                 ;     391 	if (can0_tx_remote_sentdata_flag)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",391
+000001C4 FBE2rrrrrrrr            		MOV.L #_can0_tx_remote_sentdata_flag, R14
+000001CA ECEE                    		MOV.L [R14], R14
+000001CC 610E                    		CMP #00H, R14
+000001CE 20rr                    		BEQ L70
+000001D0                         L68:	; if_then_bb12
+                                 ;     392 	{
+                                 ;     393 		can0_tx_remote_sentdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",393
+000001D0 FBE2rrrrrrrr            		MOV.L #_can0_tx_remote_sentdata_flag, R14
+000001D6 F8E600                  		MOV.L #00000000H, [R14]
+000001D9                         L69:	; if_then_bb12.split
+000001D9 6606                    		MOV.L #00000000H, R6
+                                 ;     394 		DisplayString(LCD_LINE1, "TxRemote"); LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",394
+000001DB FB22rrrrrrrr            		MOV.L #_L18, R2
+000001E1 EF61                    		MOV.L R6, R1
+000001E3 05rrrrrr             A  		BSR _DisplayString
+000001E7 FB1E000040              		MOV.L #00400000H, R1
+000001EC 39rrrr               W  		BSR _Delay
+000001EF FB72rrrrrrrr            		MOV.L #_L16, R7
+000001F5 EF61                    		MOV.L R6, R1
+000001F7 EF72                    		MOV.L R7, R2
+000001F9 05rrrrrr             A  		BSR _DisplayString
+000001FD 754110                  		MOV.L #00000010H, R1
+00000200 EF72                    		MOV.L R7, R2
+00000202 05rrrrrr             A  		BSR _DisplayString
+00000206 FB1A0020                		MOV.L #00002000H, R1
+0000020A 39rrrr               W  		BSR _Delay
+0000020D                         L70:	; if_break_bb13
+                                 ;     395 	}					
+                                 ;     396 	
+                                 ;     397 	#if TEST_FIFO
+                                 ;     398     	if (tx_fifo_flag == 1)
+                                 ;     399         /* Success detected by FIFO TX interrupt. */
+                                 ;     400         {
+                                 ;     401             tx_fifo_flag = 0;
+                                 ;     402             LED2 = LED_ON;
+                                 ;     403     		DisplayString(LCD_LINE1, "TxFifoOK");
+                                 ;     404     		LcdShow4DigHex(tx_dataframe.data[0], tx_dataframe.data[1], 16);
+                                 ;     405     		LcdShow4DigHex(tx_dataframe.data[2], tx_dataframe.data[3], 20); LCD_FLASH
+                                 ;     406         }
+                                 ;     407     #endif
+                                 ;     408 
+                                 ;     409 	/*** RECEIVED any frames? Only need to check if flag is set by CAN Rx ISR.
+                                 ;     410 	 Will only receive own frames in CAN port test modes 0 and 1. */
+                                 ;     411 	if (can0_rx_newdata_flag)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",411
+0000020D FBE2rrrrrrrr            		MOV.L #_can0_rx_newdata_flag, R14
+00000213 ECEE                    		MOV.L [R14], R14
+00000215 610E                    		CMP #00H, R14
+00000217 3Arrrr               W  		BEQ L78
+0000021A                         L71:	; if_then_bb18
+                                 ;     412 	{
+                                 ;     413 		can0_rx_newdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",413
+0000021A FBE2rrrrrrrr            		MOV.L #_can0_rx_newdata_flag, R14
+00000220 F8E600                  		MOV.L #00000000H, [R14]
+00000223                         L72:	; if_then_bb18.split
+00000223 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     414 		LED1 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",414
+00000228 F0E0                    		BSET #00H, [R14].B
+0000022A                         L73:	; if_then_bb18.split4
+0000022A 6607                    		MOV.L #00000000H, R7
+                                 ;     415 		DisplayString(LCD_LINE1, "Rx OK   "); LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",415
+0000022C FB22rrrrrrrr            		MOV.L #_L19, R2
+00000232 EF71                    		MOV.L R7, R1
+00000234 05rrrrrr             A  		BSR _DisplayString
+00000238 FB1E000040              		MOV.L #00400000H, R1
+0000023D 39rrrr               W  		BSR _Delay
+00000240 FB62rrrrrrrr            		MOV.L #_L16, R6
+00000246 EF71                    		MOV.L R7, R1
+00000248 EF62                    		MOV.L R6, R2
+0000024A 05rrrrrr             A  		BSR _DisplayString
+0000024E 754110                  		MOV.L #00000010H, R1
+00000251 EF62                    		MOV.L R6, R2
+00000253 05rrrrrr             A  		BSR _DisplayString
+00000257 FB1A0020                		MOV.L #00002000H, R1
+0000025B 39rrrr               W  		BSR _Delay
+0000025E                         L74:	; if_then_bb18.split5
+                                 ;     416 		DisplayString(LCD_LINE1, "Rx Read:");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",416
+0000025E FB22rrrrrrrr            		MOV.L #_L20, R2
+00000264 6601                    		MOV.L #00000000H, R1
+00000266 05rrrrrr             A  		BSR _DisplayString
+0000026A                         L75:	; if_then_bb18.split6
+                                 ;     417 	
+                                 ;     418 		/* Read CAN data and show. */
+                                 ;     419 		api_status = R_CAN_RxRead(0, CANBOX_RX, &rx_dataframe);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",419
+0000026A FB32rrrrrrrr            		MOV.L #_rx_dataframe, R3
+00000270 6642                    		MOV.L #00000004H, R2
+00000272 6601                    		MOV.L #00000000H, R1
+00000274 05rrrrrr             A  		BSR _R_CAN_RxRead
+00000278 E301                    		MOV.L R1, [R0]
+0000027A                         L76:	; if_then_bb18.split7
+                                 ;     420 		LcdShow4DigHex(rx_dataframe.data[0], rx_dataframe.data[1], 16);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",420
+0000027A FB12rrrrrrrr            		MOV.L #_rx_dataframe, R1
+00000280 B192                    		MOVU.B 06H[R1], R2
+00000282 B119                    		MOVU.B 05H[R1], R1
+00000284 754310                  		MOV.L #00000010H, R3
+00000287 05rrrrrr             A  		BSR _LcdShow4DigHex
+0000028B                         L77:	; if_then_bb18.split8
+                                 ;     421 		LcdShow4DigHex(rx_dataframe.data[2], rx_dataframe.data[3], 20); LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",421
+0000028B FB12rrrrrrrr            		MOV.L #_rx_dataframe, R1
+00000291 B212                    		MOVU.B 08H[R1], R2
+00000293 B199                    		MOVU.B 07H[R1], R1
+00000295 754314                  		MOV.L #00000014H, R3
+00000298 05rrrrrr             A  		BSR _LcdShow4DigHex
+0000029C FB1E000040              		MOV.L #00400000H, R1
+000002A1 39rrrr               W  		BSR _Delay
+000002A4 FB72rrrrrrrr            		MOV.L #_L16, R7
+000002AA 6601                    		MOV.L #00000000H, R1
+000002AC EF72                    		MOV.L R7, R2
+000002AE 05rrrrrr             A  		BSR _DisplayString
+000002B2 754110                  		MOV.L #00000010H, R1
+000002B5 EF72                    		MOV.L R7, R2
+000002B7 05rrrrrr             A  		BSR _DisplayString
+000002BB FB1A0020                		MOV.L #00002000H, R1
+000002BF 39rrrr               W  		BSR _Delay
+000002C2                         L78:	; if_break_bb30
+                                 ;     422 		if (api_status == R_CAN_MSGLOST)
+                                 ;     423 		{
+                                 ;     424 			//DisplayString(LCD_LINE2, "MSGLOST"); LCD_FLASH
+                                 ;     425 		}
+                                 ;     426 	}
+                                 ;     427 	if (can0_rx_test_newdata_flag)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",427
+000002C2 FBE2rrrrrrrr            		MOV.L #_can0_rx_test_newdata_flag, R14
+000002C8 ECEE                    		MOV.L [R14], R14
+000002CA 610E                    		CMP #00H, R14
+000002CC 20rr                    		BEQ L82
+000002CE                         L79:	; if_then_bb35
+                                 ;     428 	{
+                                 ;     429 		can0_rx_test_newdata_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",429
+000002CE FBE2rrrrrrrr            		MOV.L #_can0_rx_test_newdata_flag, R14
+000002D4 F8E600                  		MOV.L #00000000H, [R14]
+000002D7                         L80:	; if_then_bb35.split
+000002D7 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     430 		LED1 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",430
+000002DC F0E0                    		BSET #00H, [R14].B
+000002DE                         L81:	; if_then_bb35.split10
+000002DE 6607                    		MOV.L #00000000H, R7
+                                 ;     431 		DisplayString(LCD_LINE1, "Rx Test"); LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",431
+000002E0 FB22rrrrrrrr            		MOV.L #_L21, R2
+000002E6 EF71                    		MOV.L R7, R1
+000002E8 05rrrrrr             A  		BSR _DisplayString
+000002EC FB1E000040              		MOV.L #00400000H, R1
+000002F1 39rrrr               W  		BSR _Delay
+000002F4 FB62rrrrrrrr            		MOV.L #_L16, R6
+000002FA EF71                    		MOV.L R7, R1
+000002FC EF62                    		MOV.L R6, R2
+000002FE 05rrrrrr             A  		BSR _DisplayString
+00000302 754110                  		MOV.L #00000010H, R1
+00000305 EF62                    		MOV.L R6, R2
+00000307 05rrrrrr             A  		BSR _DisplayString
+0000030B FB1A0020                		MOV.L #00002000H, R1
+0000030F 39rrrr               W  		BSR _Delay
+00000312                         L82:	; if_break_bb36
+                                 ;     432 	}
+                                 ;     433 	/* Set up remote reply if remote request came in. */
+                                 ;     434 	if (can0_rx_remote_frame_flag == 1)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",434
+00000312 FBE2rrrrrrrr            		MOV.L #_can0_rx_remote_frame_flag, R14
+00000318 ECEE                    		MOV.L [R14], R14
+0000031A 611E                    		CMP #01H, R14
+0000031C 21rr                    		BNE L86
+0000031E                         L83:	; if_then_bb41
+                                 ;     435 	{
+                                 ;     436 		can0_rx_remote_frame_flag = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",436
+0000031E FBE2rrrrrrrr            		MOV.L #_can0_rx_remote_frame_flag, R14
+00000324 F8E600                  		MOV.L #00000000H, [R14]
+00000327                         L84:	; if_then_bb41.split
+                                 ;     437 		remote_frame.data[0]++;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",437
+00000327 FB12rrrrrrrr            		MOV.L #_remote_frame, R1
+0000032D B11A                    		MOVU.B 05H[R1], R2
+0000032F 6212                    		ADD #01H, R2
+00000331 811A                    		MOV.B R2, 05H[R1]
+00000333                         L85:	; if_then_bb41.split12
+                                 ;     438         
+                                 ;     439         if (FRAME_ID_MODE == STD_ID_MODE )
+                                 ;     440         {
+                                 ;     441             R_CAN_TxSet(0, CANBOX_REMOTE_TX, &remote_frame, DATA_FRAME);   
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",441
+00000333 FB32rrrrrrrr            		MOV.L #_remote_frame, R3
+00000339 66C2                    		MOV.L #0000000CH, R2
+0000033B 6601                    		MOV.L #00000000H, R1
+0000033D EF14                    		MOV.L R1, R4
+0000033F 05rrrrrr             A  		BSR _R_CAN_TxSet
+00000343 3F6703                  		RTSD #0CH, R6-R7
+00000346                         L86:	; return
+                                 ;     442         }
+                                 ;     443         else
+                                 ;     444         {
+                                 ;     445             R_CAN_TxSetXid(0, CANBOX_REMOTE_TX, &remote_frame, DATA_FRAME);             
+                                 ;     446         }     
+                                 ;     447 		
+                                 ;     448 	}
+                                 ;     449 }/* end CanIntDemo() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",449
+00000346 3F6703                  		RTSD #0CH, R6-R7
+00000349                         __$InitCanApp:
+                                 		.STACK	__$InitCanApp=12
+                                 ;     450 #endif //USE_CAN_POLL
+                                 ;     451 
+                                 ;     452 /*****************************************************************************
+                                 ;     453 Name:			InitCanApp
+                                 ;     454 Parameters:		-
+                                 ;     455 Returns:		-
+                                 ;     456 Description:	Initialize CAN demo application
+                                 ;     457 *****************************************************************************/
+                                 ;     458 static uint32_t InitCanApp(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",458
+00000349 6080                    		SUB #08H, R0
+                                 ;     459 {	
+                                 ;     460 	uint32_t	api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",460
+0000034B F80600                  		MOV.L #00000000H, [R0]
+0000034E                         L88:	; entry.split
+                                 ;     461 	
+                                 ;     462 	can_state[0] = R_CAN_STATUS_ERROR_ACTIVE;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",462
+0000034E FBE2rrrrrrrr            		MOV.L #__$can_state, R14
+00000354 F8E601                  		MOV.L #00000001H, [R14]
+00000357                         L89:	; entry.split1
+00000357 6652                    		MOV.L #00000005H, R2
+00000359 6601                    		MOV.L #00000000H, R1
+                                 ;     463 	
+                                 ;     464 	/* Configure mailboxes in Halt mode. */
+                                 ;     465 	api_status |= R_CAN_Control(0, HALT_CANMODE);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",465
+0000035B 05rrrrrr             A  		BSR _R_CAN_Control
+0000035F EC02                    		MOV.L [R0], R2
+00000361 5712                    		OR R1, R2
+00000363 E302                    		MOV.L R2, [R0]
+00000365                         L90:	; entry.split3
+                                 ;     466 	
+                                 ;     467 	/********	Init demo to recieve data	********/	
+                                 ;     468 	/* Use API to set one CAN mailbox for demo receive. */
+                                 ;     469 	/* Standard id. Choose value 0-0x07FF (2047). */
+                                 ;     470     if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     471     { 
+                                 ;     472 	    api_status |= R_CAN_RxSet(0, CANBOX_RX, g_rx_id_default, DATA_FRAME);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",472
+00000365 FBE2rrrrrrrr            		MOV.L #_g_rx_id_default, R14
+0000036B ECE3                    		MOV.L [R14], R3
+0000036D 6642                    		MOV.L #00000004H, R2
+0000036F 6601                    		MOV.L #00000000H, R1
+00000371 EF14                    		MOV.L R1, R4
+00000373 05rrrrrr             A  		BSR _R_CAN_RxSet
+00000377 EC02                    		MOV.L [R0], R2
+00000379 5712                    		OR R1, R2
+0000037B E302                    		MOV.L R2, [R0]
+0000037D                         L91:	; entry.split4
+                                 ;     473     }
+                                 ;     474     else
+                                 ;     475     {
+                                 ;     476 	    api_status |= R_CAN_RxSetXid(0, CANBOX_RX, g_rx_id_default, DATA_FRAME);        
+                                 ;     477     }
+                                 ;     478 	
+                                 ;     479 	/********	Init. demo Tx dataframe RAM structure	********/	
+                                 ;     480 	/* Standard id. Choose value 0-0x07FF (2047). */
+                                 ;     481 	tx_dataframe.id		=	g_tx_id_default;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",481
+0000037D FBE2rrrrrrrr            		MOV.L #_g_tx_id_default, R14
+00000383 ECEE                    		MOV.L [R14], R14
+00000385 FBF2rrrrrrrr            		MOV.L #_tx_dataframe, R15
+0000038B E3FE                    		MOV.L R14, [R15]
+0000038D                         L92:	; entry.split5
+                                 ;     482 	tx_dataframe.dlc		=	8;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",482
+0000038D FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+00000393 3C1408                  		MOV.B #08H, 04H[R1]
+00000396                         L93:	; entry.split6
+                                 ;     483 	tx_dataframe.data[0]	=	0x00;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",483
+00000396 FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+0000039C 3C1500                  		MOV.B #00H, 05H[R1]
+0000039F                         L94:	; entry.split7
+                                 ;     484 	tx_dataframe.data[1]	=	0x11;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",484
+0000039F FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003A5 3C1611                  		MOV.B #11H, 06H[R1]
+000003A8                         L95:	; entry.split8
+                                 ;     485 	tx_dataframe.data[2]	=	0x22;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",485
+000003A8 FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003AE 3C1722                  		MOV.B #22H, 07H[R1]
+000003B1                         L96:	; entry.split9
+                                 ;     486 	tx_dataframe.data[3]	=	0x33;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",486
+000003B1 FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003B7 3C1833                  		MOV.B #33H, 08H[R1]
+000003BA                         L97:	; entry.split10
+                                 ;     487 	tx_dataframe.data[4]	=	0x44;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",487
+000003BA FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003C0 3C1944                  		MOV.B #44H, 09H[R1]
+000003C3                         L98:	; entry.split11
+                                 ;     488 	tx_dataframe.data[5]	=	0x55;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",488
+000003C3 FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003C9 3C1A55                  		MOV.B #55H, 0AH[R1]
+000003CC                         L99:	; entry.split12
+                                 ;     489 	tx_dataframe.data[6]	=	0x66;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",489
+000003CC FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003D2 3C1B66                  		MOV.B #66H, 0BH[R1]
+000003D5                         L100:	; entry.split13
+                                 ;     490 	tx_dataframe.data[7]	=	0x77;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",490
+000003D5 FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+000003DB 3C1C77                  		MOV.B #77H, 0CH[R1]
+000003DE                         L101:	; entry.split14
+000003DE FB3AFF07                		MOV.L #000007FFH, R3
+000003E2 6642                    		MOV.L #00000004H, R2
+000003E4 6601                    		MOV.L #00000000H, R1
+                                 ;     491 
+                                 ;     492 	#if TEST_FIFO
+                                 ;     493 		tx_fifo_dataframe.id		=	g_tx_id_default+1;
+                                 ;     494 		tx_fifo_dataframe.dlc		=	4;
+                                 ;     495 		tx_fifo_dataframe.data[0]		=	0x00;
+                                 ;     496 		tx_fifo_dataframe.data[1]		=	0x11;
+                                 ;     497 		tx_fifo_dataframe.data[2]		=	0x22;
+                                 ;     498 		tx_fifo_dataframe.data[3]		=	0x33;
+                                 ;     499 	#endif
+                                 ;     500 
+                                 ;     501 	/* Mask for receive box. Write to mask only in Halt mode. */
+                                 ;     502 	/* 0x7FF = no mask. 0x7FD = mask bit 1, for example; If receive ID is set to 1, both
+                                 ;     503 	ID 1 and 3 should be received. */
+                                 ;     504 	R_CAN_RxSetMask( 0, CANBOX_RX, 0x7FF);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",504
+000003E6 05rrrrrr             A  		BSR _R_CAN_RxSetMask
+000003EA                         L102:	; entry.split15
+000003EA 6662                    		MOV.L #00000006H, R2
+000003EC 6601                    		MOV.L #00000000H, R1
+                                 ;     505 		
+                                 ;     506 	/* API to send will be set up in SW1Func() in file switches.c. */
+                                 ;     507 
+                                 ;     508 	api_status |= R_CAN_Control(0, OPERATE_CANMODE);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",508
+000003EE 05rrrrrr             A  		BSR _R_CAN_Control
+000003F2 EC02                    		MOV.L [R0], R2
+000003F4 5712                    		OR R1, R2
+000003F6 E302                    		MOV.L R2, [R0]
+000003F8                         L103:	; entry.split16
+                                 ;     509 
+                                 ;     510 	
+                                 ;     511 	/***************	Init. remote dataframe response **********************/
+                                 ;     512 	remote_frame.id = REMOTE_TEST_ID;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",512
+000003F8 FBE2rrrrrrrr            		MOV.L #_remote_frame, R14
+000003FE F8E650                  		MOV.L #00000050H, [R14]
+00000401                         L104:	; entry.split18
+00000401 6614                    		MOV.L #00000001H, R4
+00000403 754350                  		MOV.L #00000050H, R3
+00000406 6682                    		MOV.L #00000008H, R2
+00000408 6601                    		MOV.L #00000000H, R1
+                                 ;     513 
+                                 ;     514 	/* Length is specified by the remote request. */
+                                 ;     515 	if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     516     {
+                                 ;     517         R_CAN_RxSet(0, CANBOX_REMOTE_RX, REMOTE_TEST_ID, REMOTE_FRAME);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",517
+0000040A 05rrrrrr             A  		BSR _R_CAN_RxSet
+0000040E                         L105:	; entry.split19
+                                 ;     518     }
+                                 ;     519     else
+                                 ;     520     {
+                                 ;     521         R_CAN_RxSetXid(0, CANBOX_REMOTE_RX, REMOTE_TEST_ID, REMOTE_FRAME);        
+                                 ;     522     }
+                                 ;     523 	/***********************************************************************/
+                                 ;     524 	
+                                 ;     525 	/* Set frame buffer id so LCD shows correct receive ID from start. */
+                                 ;     526 	 rx_dataframe.id = g_rx_id_default;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",526
+0000040E FBE2rrrrrrrr            		MOV.L #_g_rx_id_default, R14
+00000414 ECEE                    		MOV.L [R14], R14
+00000416 FBF2rrrrrrrr            		MOV.L #_rx_dataframe, R15
+0000041C E3FE                    		MOV.L R14, [R15]
+0000041E                         L106:	; entry.split20
+                                 ;     527 	
+                                 ;     528 	 return api_status;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",528
+0000041E EC01                    		MOV.L [R0], R1
+00000420 A009                    		MOV.L R1, 04H[R0]
+00000422                         L107:	; entry.split21
+                                 ;     529 
+                                 ;     530 } /* end InitCanApp */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",530
+00000422 6702                    		RTSD #08H
+00000424                         __$CheckCANerrors:
+                                 		.STACK	__$CheckCANerrors=8
+                                 ;     531 
+                                 ;     532 /*****************************************************************************
+                                 ;     533 Name:			CheckCANerrors
+                                 ;     534 Parameters:		-
+                                 ;     535 Returns:		-
+                                 ;     536 Description:	Check for all possible errors, in app and peripheral. Add 
+                                 ;     537 				checking for your app here.
+                                 ;     538 *****************************************************************************/
+                                 ;     539 static void CheckCANerrors(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",539
+00000424 7EA6                    		PUSH.L R6
+00000426 6601                    		MOV.L #00000000H, R1
+                                 ;     540 {
+                                 ;     541 	/* Error passive or more? */
+                                 ;     542 	 HandleCanBusState(0);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",542
+00000428 39rrrr               W  		BSR __$HandleCanBusState
+0000042B                         L109:	; entry.split
+                                 ;     543 		
+                                 ;     544 	if (app_err_nr)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",544
+0000042B FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+00000431 ECEE                    		MOV.L [R14], R14
+00000433 610E                    		CMP #00H, R14
+00000435 20rr                    		BEQ L115
+00000437                         L110:	; if_then_bb
+00000437 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     545 	{
+                                 ;     546 		/* Show error to user */
+                                 ;     547 		/* RESET ERRORs with SW1. */
+                                 ;     548 		LED4 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",548
+0000043C F0E3                    		BSET #03H, [R14].B
+0000043E                         L111:	; if_then_bb.split
+                                 ;     549 		DisplayString(LCD_LINE1,"App err");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",549
+0000043E FB22rrrrrrrr            		MOV.L #_L22, R2
+00000444 6601                    		MOV.L #00000000H, R1
+00000446 05rrrrrr             A  		BSR _DisplayString
+0000044A                         L112:	; if_then_bb.split1
+                                 ;     550 		LcdShow2DigHex(app_err_nr, 1*16 + 4);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",550
+0000044A FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+00000450 58E1                    		MOVU.B [R14], R1
+00000452 754214                  		MOV.L #00000014H, R2
+00000455 05rrrrrr             A  		BSR _LcdShow2DigHex
+00000459                         L113:	; if_then_bb.split2
+00000459 FB1E000040              		MOV.L #00400000H, R1
+                                 ;     551 		LCD_FLASH
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",551
+0000045E 39rrrr               W  		BSR _Delay
+00000461 FB62rrrrrrrr            		MOV.L #_L16, R6
+00000467 6601                    		MOV.L #00000000H, R1
+00000469 EF62                    		MOV.L R6, R2
+0000046B 05rrrrrr             A  		BSR _DisplayString
+0000046F 754110                  		MOV.L #00000010H, R1
+00000472 EF62                    		MOV.L R6, R2
+00000474 05rrrrrr             A  		BSR _DisplayString
+00000478 FB1A0020                		MOV.L #00002000H, R1
+0000047C 39rrrr               W  		BSR _Delay
+0000047F                         L114:	; if_then_bb.split3
+0000047F FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     552 		LED4 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",552
+00000484 F0EB                    		BCLR #03H, [R14].B
+00000486 3F6601                  		RTSD #04H, R6-R6
+00000489                         L115:	; return
+                                 ;     553 	}
+                                 ;     554 }/* end CheckCANerrors() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",554
+00000489 3F6601                  		RTSD #04H, R6-R6
+0000048C                         __$HandleCanBusState:
+                                 		.STACK	__$HandleCanBusState=28
+                                 ;     555 
+                                 ;     556 /*****************************************************************************
+                                 ;     557 Name:				HandleCanBusState
+                                 ;     558 Parameters:			Bus number, 0 or 1.
+                                 ;     559 Returns:			-
+                                 ;     560 Description:		Check CAN peripheral bus state.
+                                 ;     561 *****************************************************************************/
+                                 ;     562 static void HandleCanBusState(uint8_t	ch_nr)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",562
+0000048C 7EA6                    		PUSH.L R6
+0000048E 7100EC                  		ADD #0FFFFFFECH, R0
+00000491 8489                    		MOV.B R1, 13H[R0]
+                                 ;     563 {
+                                 ;     564 	can_frame_t err_tx_dataframe;
+                                 ;     565 	
+                                 ;     566 	/* Has the status register reached error passive or more? */
+                                 ;     567 	if (ch_nr == 0)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",567
+00000493 6101                    		CMP #00H, R1
+00000495 21rr                    		BNE L118
+00000497                         L117:	; if_then_bb
+                                 ;     568 		error_bus_status[ch_nr] = R_CAN_CheckErr(0);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",568
+00000497 B48E                    		MOVU.B 13H[R0], R6
+00000499 6601                    		MOV.L #00000000H, R1
+0000049B 05rrrrrr             A  		BSR _R_CAN_CheckErr
+0000049F FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+000004A5 FE26E1                  		MOV.L R1, [R6,R14]
+000004A8                         L118:	; if_break_bb
+                                 ;     569 	/*else
+                                 ;     570 		error_bus_status[ch_nr] = R_CAN1_CheckErr(1);*/
+                                 ;     571 
+                                 ;     572 	/* Tell user if CAN bus status changed.
+                                 ;     573 		All Status bits are read only. */
+                                 ;     574 	if (error_bus_status[ch_nr] != error_bus_status_prev[ch_nr])
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",574
+000004A8 B489                    		MOVU.B 13H[R0], R1
+000004AA FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+000004B0 FE61EE                  		MOV.L [R1,R14], R14
+000004B3 FBF2rrrrrrrr            		MOV.L #__$error_bus_status_prev, R15
+000004B9 FE61FF                  		MOV.L [R1,R15], R15
+000004BC 47FE                    		CMP R15, R14
+000004BE 3Arrrr               W  		BEQ L140
+000004C1                         L119:	; if_then_bb21
+                                 ;     575 	{	
+                                 ;     576 		 switch (error_bus_status[ch_nr])
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",576
+000004C1 FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+000004C7 B489                    		MOVU.B 13H[R0], R1
+000004C9 FE61EE                  		MOV.L [R1,R14], R14
+000004CC 611E                    		CMP #01H, R14
+000004CE 21rr                    		BNE L129
+000004D0                         L120:	; switch_clause_bb
+                                 ;     577 		{
+                                 ;     578 			/* Error Active. */
+                                 ;     579 			 case R_CAN_STATUS_ERROR_ACTIVE:
+                                 ;     580 				/* Only report if there was a previous error. */
+                                 ;     581 				 if (error_bus_status_prev[ch_nr] > R_CAN_STATUS_ERROR_ACTIVE)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",581
+000004D0 FBE2rrrrrrrr            		MOV.L #__$error_bus_status_prev, R14
+000004D6 FE61EE                  		MOV.L [R1,R14], R14
+000004D9 612E                    		CMP #02H, R14
+000004DB 23rr                    		BLTU L125
+000004DD                         L121:	; if_then_bb33
+                                 ;     582 				{
+                                 ;     583 					 if (ch_nr == 0)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",583
+000004DD B489                    		MOVU.B 13H[R0], R1
+000004DF 6101                    		CMP #00H, R1
+000004E1 21rr                    		BNE L123
+000004E3                         L122:	; if_then_bb39
+                                 ;     584 					{
+                                 ;     585 						DisplayString(LCD_LINE1, "Bus0: OK");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",585
+000004E3 FB22rrrrrrrr            		MOV.L #_L23, R2
+000004E9 6601                    		MOV.L #00000000H, R1
+000004EB 05rrrrrr             A  		BSR _DisplayString
+000004EF 2Err                 B  		BRA L124
+000004F1                         L123:	; if_else_bb
+                                 ;     586 					}
+                                 ;     587 					else
+                                 ;     588 					{
+                                 ;     589 						DisplayString(LCD_LINE1, "Bus1: OK");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",589
+000004F1 FB22rrrrrrrr            		MOV.L #_L24, R2
+000004F7 6601                    		MOV.L #00000000H, R1
+000004F9 05rrrrrr             A  		BSR _DisplayString
+000004FD                         L124:	; if_break_bb40
+000004FD FB1E000040              		MOV.L #00400000H, R1
+                                 ;     590 					}
+                                 ;     591 					/* Show user */
+                                 ;     592 					 Delay(0x400000);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",592
+00000502 39rrrr               W  		BSR _Delay
+00000505                         L125:	; if_break_bb41
+                                 ;     593 				}
+                                 ;     594 				/* Restart if returned from Bus Off. */
+                                 ;     595 				 if (error_bus_status_prev[ch_nr] == R_CAN_STATUS_BUSOFF)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",595
+00000505 FBE2rrrrrrrr            		MOV.L #__$error_bus_status_prev, R14
+0000050B B489                    		MOVU.B 13H[R0], R1
+0000050D FE61EE                  		MOV.L [R1,R14], R14
+00000510 614E                    		CMP #04H, R14
+00000512 21rr                    		BNE L135
+00000514                         L126:	; if_then_bb49
+00000514 6601                    		MOV.L #00000000H, R1
+                                 ;     596 				{
+                                 ;     597 					/* Restart CAN */
+                                 ;     598 					 if (R_CAN_Create(0) != R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",598
+00000516 05rrrrrr             A  		BSR _R_CAN_Create
+0000051A 6101                    		CMP #00H, R1
+0000051C 20rr                    		BEQ L128
+0000051E                         L127:	; if_then_bb54
+                                 ;     599 						app_err_nr |= APP_ERR_CAN_PERIPH;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",599
+0000051E FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+00000524 ECEF                    		MOV.L [R14], R15
+00000526 780F                    		BSET #00H, R15
+00000528 E3EF                    		MOV.L R15, [R14]
+0000052A                         L128:	; if_break_bb57
+                                 ;     600 					
+                                 ;     601 					/* Restart CAN demos even if only one channel failed. */
+                                 ;     602 					 InitCanApp();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",602
+0000052A 39rrrr               W  		BSR __$InitCanApp
+0000052D 2Err                 B  		BRA L135
+0000052F                         L129:	; switch_clause_bb60
+                                 ;     603 				}
+                                 ;     604 				 break;	
+                                 ;     605 
+                                 ;     606 			/* Error Passive. */
+                                 ;     607 			 case R_CAN_STATUS_ERROR_PASSIVE:
+                                 ;     608 			/* Continue into Busoff case to display. */
+                                 ;     609 
+                                 ;     610 			/* Bus Off. */
+                                 ;     611 			 case R_CAN_STATUS_BUSOFF:
+                                 ;     612 			 default:
+                                 ;     613 				//demo_state[ch_nr] = CAN_BUS_OFF;
+                                 ;     614 				 if (ch_nr == 0)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",614
+0000052F 6101                    		CMP #00H, R1
+00000531 21rr                    		BNE L131
+00000533                         L130:	; if_then_bb66
+                                 ;     615 					DisplayString(LCD_LINE1,"bus0:	");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",615
+00000533 FB22rrrrrrrr            		MOV.L #_L25, R2
+00000539 6601                    		MOV.L #00000000H, R1
+0000053B 05rrrrrr             A  		BSR _DisplayString
+0000053F 2Err                 B  		BRA L132
+00000541                         L131:	; if_else_bb67
+                                 ;     616 				else
+                                 ;     617 					DisplayString(LCD_LINE2,"bus1:	");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",617
+00000541 FB22rrrrrrrr            		MOV.L #_L26, R2
+00000547 754110                  		MOV.L #00000010H, R1
+0000054A 05rrrrrr             A  		BSR _DisplayString
+0000054E                         L132:	; if_break_bb68
+                                 ;     618 				
+                                 ;     619 				/* Show user */
+                                 ;     620 				 LcdShow2DigHex((uint8_t)error_bus_status[ch_nr], ch_nr*16 + 6);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",620
+0000054E B48A                    		MOVU.B 13H[R0], R2
+00000550 FDC22E                  		SHLL #02H, R2, R14
+00000553 FBF2rrrrrrrr            		MOV.L #__$error_bus_status, R15
+00000559 FECFE1                  		MOVU.B [R15,R14], R1
+0000055C 6C42                    		SHLL #04H, R2
+0000055E 6562                    		OR #06H, R2
+00000560 5B22                    		MOVU.B R2, R2
+00000562 05rrrrrr             A  		BSR _LcdShow2DigHex
+00000566                         L133:	; if_break_bb68.split
+00000566 FB1E000040              		MOV.L #00400000H, R1
+                                 ;     621 				 Delay(0x400000);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",621
+0000056B 39rrrr               W  		BSR _Delay
+0000056E                         L134:	; if_break_bb68.split1
+                                 ;     622 				 nr_times_reached_busoff[ch_nr]++;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",622
+0000056E FBE2rrrrrrrr            		MOV.L #__$nr_times_reached_busoff, R14
+00000574 B489                    		MOVU.B 13H[R0], R1
+00000576 FE61EF                  		MOV.L [R1,R14], R15
+00000579 621F                    		ADD #01H, R15
+0000057B FE21EF                  		MOV.L R15, [R1,R14]
+0000057E                         L135:	; switch_break_bb
+                                 ;     623 				 break;
+                                 ;     624 		}
+                                 ;     625 		 error_bus_status_prev[ch_nr] = error_bus_status[ch_nr];
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",625
+0000057E B489                    		MOVU.B 13H[R0], R1
+00000580 FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+00000586 FE61EE                  		MOV.L [R1,R14], R14
+00000589 FBF2rrrrrrrr            		MOV.L #__$error_bus_status_prev, R15
+0000058F FE21FE                  		MOV.L R14, [R1,R15]
+00000592                         L136:	; switch_break_bb.split
+                                 ;     626 
+                                 ;     627 		/* Transmit CAN bus status change */
+                                 ;     628 		err_tx_dataframe.id = 0x700 + ch_nr;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",628
+00000592 B489                    		MOVU.B 13H[R0], R1
+00000594 76310007                		OR #0700H, R1
+00000598 E301                    		MOV.L R1, [R0]
+0000059A                         L137:	; switch_break_bb.split2
+                                 ;     629 		err_tx_dataframe.dlc =	1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",629
+0000059A 3C0401                  		MOV.B #01H, 04H[R0]
+0000059D                         L138:	; switch_break_bb.split3
+                                 ;     630 		err_tx_dataframe.data[0] = error_bus_status[ch_nr];
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",630
+0000059D FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+000005A3 B489                    		MOVU.B 13H[R0], R1
+000005A5 FE61E1                  		MOV.L [R1,R14], R1
+000005A8 8109                    		MOV.B R1, 05H[R0]
+000005AA                         L139:	; switch_break_bb.split5
+                                 ;     631 		
+                                 ;     632 		/* Send Error state on both channels. Maybe at least one is up. 
+                                 ;     633 		 Warning: If CAN0 and CAN1 are connected to eachother, they will try to
+                                 ;     634 		 send practically simultaneously. Let this be a lesson; sending the same 
+                                 ;     635 		 ID from two nodes onto the same bus at the same time is very hazardous
+                                 ;     636 		 as the arbitration cannot take place. Only use both lines below if 
+                                 ;     637 		 CAN0 and CAN1 are on different buses. */
+                                 ;     638          if (FRAME_ID_MODE == STD_ID_MODE )
+                                 ;     639          {
+                                 ;     640 		    R_CAN_TxSet(0, g_tx_id_default, &err_tx_dataframe, DATA_FRAME);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",640
+000005AA FBE2rrrrrrrr            		MOV.L #_g_tx_id_default, R14
+000005B0 ECE2                    		MOV.L [R14], R2
+000005B2 EF03                    		MOV.L R0, R3
+000005B4 6601                    		MOV.L #00000000H, R1
+000005B6 EF14                    		MOV.L R1, R4
+000005B8 05rrrrrr             A  		BSR _R_CAN_TxSet
+000005BC 3F6606                  		RTSD #18H, R6-R6
+000005BF                         L140:	; return
+                                 ;     641          }
+                                 ;     642          else
+                                 ;     643          {
+                                 ;     644 		    R_CAN_TxSetXid(0, g_tx_id_default, &err_tx_dataframe, DATA_FRAME);             
+                                 ;     645          }
+                                 ;     646 		//R_CAN_TxSet(1, g_tx_id_default, &err_tx_dataframe, DATA_FRAME);
+                                 ;     647 	 }
+                                 ;     648 }/* end HandleCanBusState() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",648
+000005BF 3F6606                  		RTSD #18H, R6-R6
+000005C2                         _ResetAllErrors:
+                                 		.STACK	_ResetAllErrors=12
+                                 ;     649 
+                                 ;     650 /*******************************************************************************
+                                 ;     651 Function Name:	ResetAllErrors
+                                 ;     652 Description:	Reset all types of errors, application and CAN peripeheral errors.
+                                 ;     653 Parameters:	 	-
+                                 ;     654 Return value:	CAN API code
+                                 ;     655 *******************************************************************************/
+                                 ;     656 uint32_t ResetAllErrors(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",656
+000005C2 6080                    		SUB #08H, R0
+                                 ;     657 {		
+                                 ;     658 	 uint32_t status = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",658
+000005C4 F80600                  		MOV.L #00000000H, [R0]
+000005C7                         L142:	; entry.split
+                                 ;     659 	
+                                 ;     660 	/* Reset errors */
+                                 ;     661 	 app_err_nr = APP_NO_ERR;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",661
+000005C7 FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+000005CD F8E600                  		MOV.L #00000000H, [R14]
+000005D0                         L143:	; entry.split1
+                                 ;     662 	
+                                 ;     663 	 error_bus_status[0] = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",663
+000005D0 FBE2rrrrrrrr            		MOV.L #__$error_bus_status, R14
+000005D6 F8E600                  		MOV.L #00000000H, [R14]
+000005D9                         L144:	; entry.split2
+                                 ;     664 	 error_bus_status[1] = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",664
+000005D9 FB12rrrrrrrr            		MOV.L #__$error_bus_status, R1
+000005DF 3E1100                  		MOV.L #00000000H, 04H[R1]
+000005E2                         L145:	; entry.split3
+                                 ;     665 
+                                 ;     666 	/* You can chooose to not reset error_bus_status_prev; if there was an error, 
+                                 ;     667 	 keep info to signal recovery */
+                                 ;     668 	 error_bus_status_prev[0] = 0; 
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",668
+000005E2 FBE2rrrrrrrr            		MOV.L #__$error_bus_status_prev, R14
+000005E8 F8E600                  		MOV.L #00000000H, [R14]
+000005EB                         L146:	; entry.split4
+                                 ;     669 	 error_bus_status_prev[1] = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",669
+000005EB FB12rrrrrrrr            		MOV.L #__$error_bus_status_prev, R1
+000005F1 3E1100                  		MOV.L #00000000H, 04H[R1]
+000005F4                         L147:	; entry.split5
+                                 ;     670 	
+                                 ;     671 	 nr_times_reached_busoff[0] = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",671
+000005F4 FBE2rrrrrrrr            		MOV.L #__$nr_times_reached_busoff, R14
+000005FA F8E600                  		MOV.L #00000000H, [R14]
+000005FD                         L148:	; entry.split6
+                                 ;     672 	 nr_times_reached_busoff[1] = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",672
+000005FD FB12rrrrrrrr            		MOV.L #__$nr_times_reached_busoff, R1
+00000603 3E1100                  		MOV.L #00000000H, 04H[R1]
+00000606                         L149:	; entry.split7
+                                 ;     673 	
+                                 ;     674 	/* Reset Error Judge Factor and Error Code registers */
+                                 ;     675 	 CAN0.EIFR.BYTE /*= CAN1.EIFR.BYTE*/ = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",675
+00000606 FBEE4D0809              		MOV.L #0009084DH, R14
+0000060B F8E400                  		MOV.B #00H, [R14]
+0000060E                         L150:	; entry.split8
+                                 ;     676 	
+                                 ;     677 	/* Reset CAN0 Error Code Store Register (ECSR). */
+                                 ;     678 	CAN0.ECSR.BYTE = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",678
+0000060E FB1E4D0809              		MOV.L #0009084DH, R1
+00000613 3C1300                  		MOV.B #00H, 03H[R1]
+00000616                         L151:	; entry.split9
+                                 ;     679 	
+                                 ;     680 	/* Reset CAN0 Error Counters. */
+                                 ;     681 	CAN0.RECR = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",681
+00000616 FB1E4D0809              		MOV.L #0009084DH, R1
+0000061B 3C1100                  		MOV.B #00H, 01H[R1]
+0000061E                         L152:	; entry.split10
+                                 ;     682 	CAN0.TECR = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",682
+0000061E FB1E4D0809              		MOV.L #0009084DH, R1
+00000623 3C1200                  		MOV.B #00H, 02H[R1]
+00000626                         L153:	; entry.split11
+                                 ;     683 
+                                 ;     684 	return status;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",684
+00000626 EC01                    		MOV.L [R0], R1
+00000628 A009                    		MOV.L R1, 04H[R0]
+0000062A                         L154:	; entry.split12
+                                 ;     685 }/* end ResetAllErrors() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",685
+0000062A 6702                    		RTSD #08H
+0000062C                         __$TestLEDs:
+                                 		.STACK	__$TestLEDs=16
+                                 ;     686 
+                                 ;     687 /******************************************************************************
+                                 ;     688 Function Name:		TestLEDs
+                                 ;     689 Parameters:			-
+                                 ;     690 Return value:		-
+                                 ;     691 Description:		Blink the LEDs
+                                 ;     692 ******************************************************************************/
+                                 ;     693 void TestLEDs(uint32_t nr_led_flashes)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",693
+0000062C 60C0                    		SUB #0CH, R0
+0000062E A081                    		MOV.L R1, 08H[R0]
+                                 ;     694 {
+                                 ;     695 	uint32_t i = LED_DELAY;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",695
+00000630 F90E01000008            		MOV.L #00080000H, 04H[R0]
+00000636                         L156:	; entry.split
+00000636 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     696 	uint32_t j;
+                                 ;     697 	
+                                 ;     698 	LED1 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",698
+0000063B F0E0                    		BSET #00H, [R14].B
+0000063D                         L157:	; entry.split1
+0000063D FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     699 	LED2 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",699
+00000642 F0E9                    		BCLR #01H, [R14].B
+00000644                         L158:	; entry.split2
+00000644 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     700 	LED3 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",700
+00000649 F0E2                    		BSET #02H, [R14].B
+0000064B                         L159:	; entry.split3
+0000064B FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     701 	LED4 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",701
+00000650 F0EB                    		BCLR #03H, [R14].B
+00000652                         L160:	; entry.split4
+00000652 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     702 	LED5 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",702
+00000657 F0E4                    		BSET #04H, [R14].B
+00000659                         L161:	; entry.split5
+00000659 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     703 	LED6 = LED_OFF;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",703
+0000065E F0ED                    		BCLR #05H, [R14].B
+00000660                         L162:	; entry.split6
+                                 ;     704 	
+                                 ;     705 	for (j = 0; j < nr_led_flashes; j++)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",705
+00000660 F80600                  		MOV.L #00000000H, [R0]
+00000663 38rrrr               W  		BRA L171
+00000666                         L163:	; bb5
+                                 ;     706 	{
+                                 ;     707 		while(i--)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",707
+00000666 A809                    		MOV.L 04H[R0], R1
+00000668 7112FF                  		ADD #0FFFFFFFFH, R1, R2
+0000066B A00A                    		MOV.L R2, 04H[R0]
+0000066D 6101                    		CMP #00H, R1
+0000066F 21rr                    		BNE L163
+00000671                         L164:	; bb10
+                                 ;     708 			;
+                                 ;     709 		
+                                 ;     710 		i = LED_DELAY;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",710
+00000671 F90E01000008            		MOV.L #00080000H, 04H[R0]
+00000677                         L165:	; bb10.split
+00000677 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     711 		
+                                 ;     712 		LED1 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",712
+0000067C 58EF                    		MOVU.B [R14], R15
+0000067E EFF5                    		MOV.L R15, R5
+00000680 7625FE00                		AND #0FEH, R5
+00000684 641F                    		AND #01H, R15
+00000686 FDE0FF                  		BNOT #00H, R15
+00000689 57F5                    		OR R15, R5
+0000068B C3E5                    		MOV.B R5, [R14]
+0000068D                         L166:	; bb10.split7
+0000068D FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     713 			LED2 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",713
+00000692 58EF                    		MOVU.B [R14], R15
+00000694 EFF5                    		MOV.L R15, R5
+00000696 7A15                    		BCLR #01H, R5
+00000698 681F                    		SHLR #01H, R15
+0000069A 641F                    		AND #01H, R15
+0000069C FDE0FF                  		BNOT #00H, R15
+0000069F 6C1F                    		SHLL #01H, R15
+000006A1 57F5                    		OR R15, R5
+000006A3 C3E5                    		MOV.B R5, [R14]
+000006A5                         L167:	; bb10.split8
+000006A5 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     714 		LED3 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",714
+000006AA 58EF                    		MOVU.B [R14], R15
+000006AC EFF5                    		MOV.L R15, R5
+000006AE 7A25                    		BCLR #02H, R5
+000006B0 682F                    		SHLR #02H, R15
+000006B2 641F                    		AND #01H, R15
+000006B4 FDE0FF                  		BNOT #00H, R15
+000006B7 6C2F                    		SHLL #02H, R15
+000006B9 57F5                    		OR R15, R5
+000006BB C3E5                    		MOV.B R5, [R14]
+000006BD                         L168:	; bb10.split9
+000006BD FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     715 		LED4 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",715
+000006C2 58EF                    		MOVU.B [R14], R15
+000006C4 EFF5                    		MOV.L R15, R5
+000006C6 7A35                    		BCLR #03H, R5
+000006C8 683F                    		SHLR #03H, R15
+000006CA 641F                    		AND #01H, R15
+000006CC FDE0FF                  		BNOT #00H, R15
+000006CF 6C3F                    		SHLL #03H, R15
+000006D1 57F5                    		OR R15, R5
+000006D3 C3E5                    		MOV.B R5, [R14]
+000006D5                         L169:	; bb10.split10
+000006D5 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     716 		LED5 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",716
+000006DA 58EF                    		MOVU.B [R14], R15
+000006DC EFF5                    		MOV.L R15, R5
+000006DE 7A45                    		BCLR #04H, R5
+000006E0 684F                    		SHLR #04H, R15
+000006E2 641F                    		AND #01H, R15
+000006E4 FDE0FF                  		BNOT #00H, R15
+000006E7 6C4F                    		SHLL #04H, R15
+000006E9 57F5                    		OR R15, R5
+000006EB C3E5                    		MOV.B R5, [R14]
+000006ED                         L170:	; bb10.split11
+000006ED FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     717 		LED6 ^= 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",717
+000006F2 58EF                    		MOVU.B [R14], R15
+000006F4 EFF5                    		MOV.L R15, R5
+000006F6 7A55                    		BCLR #05H, R5
+000006F8 685F                    		SHLR #05H, R15
+000006FA 641F                    		AND #01H, R15
+000006FC FDE0FF                  		BNOT #00H, R15
+000006FF 6C5F                    		SHLL #05H, R15
+00000701 57F5                    		OR R15, R5
+00000703 C3E5                    		MOV.B R5, [R14]
+00000705 EC01                    		MOV.L [R0], R1
+00000707 6211                    		ADD #01H, R1
+00000709 E301                    		MOV.L R1, [R0]
+0000070B                         L171:	; bb72
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",705
+0000070B EC01                    		MOV.L [R0], R1
+0000070D 06850102                		CMP 08H[R0].L, R1
+00000711 22rr                  * 		BLTU L163
+         38rrrr                  
+00000716                         L172:	; bb78
+00000716 FBEE2DC008              		MOV.L #0008C02DH, R14
+                                 ;     718 	}
+                                 ;     719 	ALL_LEDS_OFF
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",719
+0000071B F0ED                    		BCLR #05H, [R14].B
+0000071D 58EF                    		MOVU.B [R14], R15
+0000071F 58E5                    		MOVU.B [R14], R5
+00000721 7A45                    		BCLR #04H, R5
+00000723 681F                    		SHLR #01H, R15
+00000725 752F10                  		AND #10H, R15
+00000728 57F5                    		OR R15, R5
+0000072A C3E5                    		MOV.B R5, [R14]
+0000072C 58EF                    		MOVU.B [R14], R15
+0000072E 58E5                    		MOVU.B [R14], R5
+00000730 7A35                    		BCLR #03H, R5
+00000732 681F                    		SHLR #01H, R15
+00000734 648F                    		AND #08H, R15
+00000736 57F5                    		OR R15, R5
+00000738 C3E5                    		MOV.B R5, [R14]
+0000073A 58EF                    		MOVU.B [R14], R15
+0000073C 58E5                    		MOVU.B [R14], R5
+0000073E 7A25                    		BCLR #02H, R5
+00000740 681F                    		SHLR #01H, R15
+00000742 644F                    		AND #04H, R15
+00000744 57F5                    		OR R15, R5
+00000746 C3E5                    		MOV.B R5, [R14]
+00000748 58EF                    		MOVU.B [R14], R15
+0000074A 58E5                    		MOVU.B [R14], R5
+0000074C 7A15                    		BCLR #01H, R5
+0000074E 681F                    		SHLR #01H, R15
+00000750 642F                    		AND #02H, R15
+00000752 57F5                    		OR R15, R5
+00000754 C3E5                    		MOV.B R5, [R14]
+00000756 58EF                    		MOVU.B [R14], R15
+00000758 58E5                    		MOVU.B [R14], R5
+0000075A 7A05                    		BCLR #00H, R5
+0000075C 681F                    		SHLR #01H, R15
+0000075E 641F                    		AND #01H, R15
+00000760 57F5                    		OR R15, R5
+00000762 C3E5                    		MOV.B R5, [R14]
+00000764 6703                    		RTSD #0CH
+00000766                         _Delay:
+                                 		.STACK	_Delay=12
+                                 ;     720 } /* end TestLEDs() */
+                                 ;     721 
+                                 ;     722 /*******************************************************************************
+                                 ;     723 Function Name:	Delay
+                                 ;     724 Description:	Demo delay
+                                 ;     725 Parameters:	 	32-bit delay count value
+                                 ;     726 Return value:	-
+                                 ;     727 *******************************************************************************/
+                                 ;     728 void Delay(uint32_t n)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",728
+00000766 6080                    		SUB #08H, R0
+00000768 A009                    		MOV.L R1, 04H[R0]
+                                 ;     729 {
+                                 ;     730 	uint32_t i;
+                                 ;     731 	
+                                 ;     732 	 for(i = 0; i < n; i++)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",732
+0000076A F80600                  		MOV.L #00000000H, [R0]
+0000076D 08                   S  		BRA L175
+0000076E                         L174:	; bb
+                                 ;     733 		 nop();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",733
+0000076E 03                      		NOP
+0000076F EC01                    		MOV.L [R0], R1
+00000771 6211                    		ADD #01H, R1
+00000773 E301                    		MOV.L R1, [R0]
+00000775                         L175:	; bb4
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",732
+00000775 EC01                    		MOV.L [R0], R1
+00000777 06850101                		CMP 04H[R0].L, R1
+0000077B 23rr                    		BLTU L174
+0000077D                         L176:	; return
+                                 ;     734 }/* end Delay() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",734
+0000077D 6702                    		RTSD #08H
+0000077F                         _CAN0_TXM0_ISR:
+                                 		.STACK	_CAN0_TXM0_ISR=40
+                                 		.RVECTOR	60,_CAN0_TXM0_ISR
+                                 ;     735 
+                                 ;     736 
+                                 ;     737 /*******************************************************************************
+                                 ;     738 
+                                 ;     739 
+                                 ;     740 						CAN INTERRRUPTS 
+                                 ;     741 
+                                 ;     742 
+                                 ;     743 *******************************************************************************/
+                                 ;     744 #ifndef USE_CAN_POLL
+                                 ;     745 /*****************************************************************************
+                                 ;     746 Name:				CAN0 ISRs
+                                 ;     747 Parameters:		-
+                                 ;     748 Returns:			-
+                                 ;     749 Description:		CAN interrupt routine examples.
+                                 ;     750 *****************************************************************************/
+                                 ;     751 /*****************************************************************************
+                                 ;     752 Name:			CAN0_TXM0_ISR
+                                 ;     753 Parameters:		-
+                                 ;     754 Returns:		-
+                                 ;     755 Description:	CAN0 Transmit interrupt.
+                                 ;     756 				Check which mailbox transmitted data and process it.
+                                 ;     757 *****************************************************************************/
+                                 ;     758 #pragma interrupt CAN0_TXM0_ISR(vect=VECT_CAN0_TXM0, enable) 
+                                 ;     759 void CAN0_TXM0_ISR(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",759
+0000077F 7FA8                    		SETPSW I
+00000781 6EEF                    		PUSHM R14-R15
+00000783 6E15                    		PUSHM R1-R5
+00000785 6040                    		SUB #04H, R0
+                                 ;     760 {
+                                 ;     761 	uint32_t api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",761
+00000787 F80600                  		MOV.L #00000000H, [R0]
+0000078A                         L178:	; entry.split
+0000078A 6612                    		MOV.L #00000001H, R2
+0000078C 6601                    		MOV.L #00000000H, R1
+                                 ;     762 
+                                 ;     763 	api_status = R_CAN_TxCheck(0, CANBOX_TX);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",763
+0000078E 05rrrrrr             A  		BSR _R_CAN_TxCheck
+00000792 E301                    		MOV.L R1, [R0]
+00000794                         L179:	; entry.split1
+                                 ;     764 	if (api_status == R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",764
+00000794 EC01                    		MOV.L [R0], R1
+00000796 6101                    		CMP #00H, R1
+00000798 18                   S  		BNE L181
+00000799                         L180:	; if_then_bb
+                                 ;     765 		can0_tx_sentdata_flag = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",765
+00000799 FB12rrrrrrrr            		MOV.L #_can0_tx_sentdata_flag, R1
+0000079F F81601                  		MOV.L #00000001H, [R1]
+000007A2                         L181:	; if_break_bb
+000007A2 66C2                    		MOV.L #0000000CH, R2
+000007A4 6601                    		MOV.L #00000000H, R1
+                                 ;     766 	api_status = R_CAN_TxCheck(0, CANBOX_REMOTE_TX);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",766
+000007A6 05rrrrrr             A  		BSR _R_CAN_TxCheck
+000007AA E301                    		MOV.L R1, [R0]
+000007AC                         L182:	; if_break_bb.split
+                                 ;     767 	if (api_status == R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",767
+000007AC EC01                    		MOV.L [R0], R1
+000007AE 6101                    		CMP #00H, R1
+000007B0 21rr                    		BNE L184
+000007B2                         L183:	; if_then_bb10
+                                 ;     768 		can0_tx_remote_sentdata_flag = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",768
+000007B2 FB12rrrrrrrr            		MOV.L #_can0_tx_remote_sentdata_flag, R1
+000007B8 F81601                  		MOV.L #00000001H, [R1]
+000007BB 6240                    		ADD #04H, R0
+000007BD 6F15                    		POPM R1-R5
+000007BF 6FEF                    		POPM R14-R15
+000007C1 7F95                    		RTE
+000007C3                         L184:	; return
+                                 ;     769 	
+                                 ;     770 	/* Use mailbox search reg. Should be faster than above if a lot of mailboxes to check. 
+                                 ;     771 	Not verified. */
+                                 ;     772 }/* end CAN0_TXM0_ISR() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",772
+000007C3 6240                    		ADD #04H, R0
+000007C5 6F15                    		POPM R1-R5
+000007C7 6FEF                    		POPM R14-R15
+000007C9 7F95                    		RTE
+000007CB                         _CAN0_RXM0_ISR:
+                                 		.STACK	_CAN0_RXM0_ISR=40
+                                 		.RVECTOR	59,_CAN0_RXM0_ISR
+                                 ;     773 
+                                 ;     774 /*****************************************************************************
+                                 ;     775 Name:			CAN0_RXM0_ISR
+                                 ;     776 Parameters:		-
+                                 ;     777 Returns:		-
+                                 ;     778 Description:	CAN0 Receive interrupt.
+                                 ;     779 				Check which mailbox received data and process it.
+                                 ;     780 *****************************************************************************/
+                                 ;     781 #pragma interrupt CAN0_RXM0_ISR(vect=VECT_CAN0_RXM0, enable)
+                                 ;     782 void CAN0_RXM0_ISR(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",782
+000007CB 7FA8                    		SETPSW I
+000007CD 6EEF                    		PUSHM R14-R15
+000007CF 6E15                    		PUSHM R1-R5
+000007D1 6040                    		SUB #04H, R0
+                                 ;     783 {
+                                 ;     784 	/* Use CAN API. */
+                                 ;     785 	uint32_t api_status = R_CAN_OK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",785
+000007D3 F80600                  		MOV.L #00000000H, [R0]
+000007D6                         L186:	; entry.split
+000007D6 6642                    		MOV.L #00000004H, R2
+000007D8 6601                    		MOV.L #00000000H, R1
+                                 ;     786 
+                                 ;     787 	api_status = R_CAN_RxPoll(0, CANBOX_RX);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",787
+000007DA 05rrrrrr             A  		BSR _R_CAN_RxPoll
+000007DE E301                    		MOV.L R1, [R0]
+000007E0                         L187:	; entry.split1
+                                 ;     788 	if (api_status == R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",788
+000007E0 EC01                    		MOV.L [R0], R1
+000007E2 6101                    		CMP #00H, R1
+000007E4 18                   S  		BNE L189
+000007E5                         L188:	; if_then_bb
+                                 ;     789 		can0_rx_newdata_flag = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",789
+000007E5 FB12rrrrrrrr            		MOV.L #_can0_rx_newdata_flag, R1
+000007EB F81601                  		MOV.L #00000001H, [R1]
+000007EE                         L189:	; if_break_bb
+000007EE 6682                    		MOV.L #00000008H, R2
+000007F0 6601                    		MOV.L #00000000H, R1
+                                 ;     790 		
+                                 ;     791 	api_status = R_CAN_RxPoll(0, CANBOX_REMOTE_RX);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",791
+000007F2 05rrrrrr             A  		BSR _R_CAN_RxPoll
+000007F6 E301                    		MOV.L R1, [R0]
+000007F8                         L190:	; if_break_bb.split
+                                 ;     792 	if (api_status == R_CAN_OK)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",792
+000007F8 EC01                    		MOV.L [R0], R1
+000007FA 6101                    		CMP #00H, R1
+000007FC 21rr                    		BNE L194
+000007FE                         L191:	; if_then_bb10
+                                 ;     793 	{
+                                 ;     794 		/* REMOTE_FRAME FRAME REQUEST RECEIVED */
+                                 ;     795 		/* Do not set BP on the next line to check for Remote frame. By the time you 
+                                 ;     796 		continue, the recsucc flag will already have changed to be a trmsucc flag in 
+                                 ;     797 		the CAN status reg. */
+                                 ;     798 	
+                                 ;     799 		/* Reset of the receive/transmit flag in the MCTL register will be done by 
+                                 ;     800 		set_remote_reply_std_can0(). */
+                                 ;     801 
+                                 ;     802 		/* Tell application. */
+                                 ;     803 		can0_rx_remote_frame_flag = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",803
+000007FE FB12rrrrrrrr            		MOV.L #_can0_rx_remote_frame_flag, R1
+00000804 F81601                  		MOV.L #00000001H, [R1]
+00000807                         L192:	; if_then_bb10.split
+                                 ;     804 		
+                                 ;     805 		remote_frame.dlc = CAN0.MB[CANBOX_REMOTE_RX].DLC.BIT.DLC;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",805
+00000807 FB1E850209              		MOV.L #00090285H, R1
+0000080C 5811                    		MOVU.B [R1], R1
+0000080E 64F1                    		AND #0FH, R1
+00000810 FB22rrrrrrrr            		MOV.L #_remote_frame, R2
+00000816 8121                    		MOV.B R1, 04H[R2]
+00000818                         L193:	; if_then_bb10.split2
+                                 ;     806 		
+                                 ;     807 		/* Reset NEWDATA flag since we won't be reading the mailbox. */
+                                 ;     808 		CAN0.MCTL[CANBOX_REMOTE_RX].BIT.RX.NEWDATA = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",808
+00000818 FB1E850209              		MOV.L #00090285H, R1
+0000081D F218A305                		BCLR #00H, 05A3H[R1].B
+00000821 6240                    		ADD #04H, R0
+00000823 6F15                    		POPM R1-R5
+00000825 6FEF                    		POPM R14-R15
+00000827 7F95                    		RTE
+00000829                         L194:	; return
+                                 ;     809 	}
+                                 ;     810 	
+                                 ;     811 	/* Use mailbox search reg. Should be faster if a lot of mailboxes to check. 
+                                 ;     812 	Not verified. */
+                                 ;     813 }/* end CAN0_RXM0_ISR() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",813
+00000829 6240                    		ADD #04H, R0
+0000082B 6F15                    		POPM R1-R5
+0000082D 6FEF                    		POPM R14-R15
+0000082F 7F95                    		RTE
+00000831                         _CAN0_ERS0_ISR:
+                                 		.STACK	_CAN0_ERS0_ISR=12
+                                 		.RVECTOR	56,_CAN0_ERS0_ISR
+                                 ;     814 
+                                 ;     815 /*****************************************************************************
+                                 ;     816 Name:			CAN0_ERS0_ISR
+                                 ;     817 Parameters:		-
+                                 ;     818 Returns:		-
+                                 ;     819 Description:	CAN0 Error interrupt.
+                                 ;     820 *****************************************************************************/
+                                 ;     821 #pragma interrupt	CAN0_ERS0_ISR(vect=VECT_CAN0_ERS0, enable)
+                                 ;     822 void CAN0_ERS0_ISR(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",822
+00000831 7FA8                    		SETPSW I
+00000833 7EA1                    		PUSH.L R1
+00000835 FB1E2DC008              		MOV.L #0008C02DH, R1
+                                 ;     823 {
+                                 ;     824 	 LED4 = LED_ON;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",824
+0000083A F013                    		BSET #03H, [R1].B
+0000083C                         L196:	; entry.split
+                                 ;     825 	 nop();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\api_demo.c",825
+0000083C 03                      		NOP
+0000083D 7EB1                    		POP R1
+0000083F 7F95                    		RTE
+                                 ;     826 }/* end CAN0_ERS0_ISR() */
+                                 ;     827 
+                                 ;     828 #if TEST_FIFO
+                                 ;     829 /*****************************************************************************
+                                 ;     830 Name:			CAN0_TXF0_ISR
+                                 ;     831 Parameters:		-
+                                 ;     832 Returns:		-
+                                 ;     833 Description:	CAN0 Tx Fifo interrupt.
+                                 ;     834 *****************************************************************************/
+                                 ;     835 #pragma interrupt	CAN0_TXF0_ISR(vect=VECT_CAN0_TXF0, enable)
+                                 ;     836 void CAN0_TXF0_ISR(void)
+                                 ;     837 {
+                                 ;     838     uint32_t api_status = R_CAN_OK;
+                                 ;     839     api_status = R_CAN_TxCheck(0, TX_FIFO_MBX);
+                                 ;     840 	if (api_status == R_CAN_OK)
+                                 ;     841 	{
+                                 ;     842         /* $REA FIX - Never gets here. */
+                                 ;     843         tx_fifo_flag = 1;
+                                 ;     844     }
+                                 ;     845 }/* end CAN0_TXF0_ISR() */
+                                 ;     846 
+                                 ;     847 /*****************************************************************************
+                                 ;     848 Name:            CAN0_RXF0_ISR
+                                 ;     849 Parameters:        -
+                                 ;     850 Returns:        -
+                                 ;     851 Description:    CAN0 Rx Fifo interrupt.
+                                 ;     852 *****************************************************************************/
+                                 ;     853 #pragma interrupt    CAN0_RXF0_ISR(vect=VECT_CAN0_RXF0, enable)
+                                 ;     854 void CAN0_RXF0_ISR(void)
+                                 ;     855 {
+                                 ;     856     nop();
+                                 ;     857 }/* end CAN0_RXF0_ISR() */
+                                 ;     858 #endif
+                                 ;     859 
+                                 ;     860 #endif //USE_CAN_POLL
+                                 ;     861 
+                                 ;     862 /* eof */
+                                 		.SECTION	L,ROMDATA,ALIGN=4
+00000000                         _L10:
+00000000 52583632                		.byte	"RX62N "
+         4E20                    
+00000006 00                      		.byte	00H
+00000007                         _L11:
+00000007 53696D70                		.byte	"Simple"
+         6C65                    
+0000000D 00                      		.byte	00H
+0000000E                         _L12:
+0000000E 54785278                		.byte	"TxRx"
+00000012 00                      		.byte	00H
+00000013                         _L13:
+00000013 43414E20                		.byte	"CAN Demo"
+         44656D6F                
+0000001B 00                      		.byte	00H
+0000001C                         _L14:
+0000001C 41707020                		.byte	"App in"
+         696E                    
+00000022 0900                    		.byte	09H,00H
+00000024                         _L15:
+00000024 42757320                		.byte	"Bus Off "
+         4F666620                
+0000002C 00                      		.byte	00H
+0000002D                         _L16:
+0000002D 20202020                		.byte	"        "
+         20202020                
+00000035 00                      		.byte	00H
+00000036                         _L17:
+00000036 5478204F                		.byte	"Tx OK    "
+         4B202020                
+         20                      
+0000003F 00                      		.byte	00H
+00000040                         _L18:
+00000040 54785265                		.byte	"TxRemote"
+         6D6F7465                
+00000048 00                      		.byte	00H
+00000049                         _L19:
+00000049 5278204F                		.byte	"Rx OK   "
+         4B202020                
+00000051 00                      		.byte	00H
+00000052                         _L20:
+00000052 52782052                		.byte	"Rx Read:"
+         6561643A                
+0000005A 00                      		.byte	00H
+0000005B                         _L21:
+0000005B 52782054                		.byte	"Rx Test"
+         657374                  
+00000062 00                      		.byte	00H
+00000063                         _L22:
+00000063 41707020                		.byte	"App err"
+         657272                  
+0000006A 00                      		.byte	00H
+0000006B                         _L23:
+0000006B 42757330                		.byte	"Bus0: OK"
+         3A204F4B                
+00000073 00                      		.byte	00H
+00000074                         _L24:
+00000074 42757331                		.byte	"Bus1: OK"
+         3A204F4B                
+0000007C 00                      		.byte	00H
+0000007D                         _L25:
+0000007D 62757330                		.byte	"bus0:"
+         3A                      
+00000082 0900                    		.byte	09H,00H
+00000084                         _L26:
+00000084 62757331                		.byte	"bus1:"
+         3A                      
+00000089 0900                    		.byte	09H,00H
+                                 		.SECTION	D,ROMDATA,ALIGN=4
+00000000                         _can0_tx_sentdata_flag:
+00000000 00000000                		.lword	00000000H
+00000004                         _can0_tx_remote_sentdata_flag:
+00000004 00000000                		.lword	00000000H
+00000008                         _can0_rx_newdata_flag:
+00000008 00000000                		.lword	00000000H
+0000000C                         _can0_rx_test_newdata_flag:
+0000000C 00000000                		.lword	00000000H
+00000010                         _can0_rx_remote_frame_flag:
+00000010 00000000                		.lword	00000000H
+00000014                         __$error_bus_status:
+00000014 01000000                		.lword	00000001H,00000001H
+         01000000                
+0000001C                         __$error_bus_status_prev:
+0000001C 01000000                		.lword	00000001H,00000001H
+         01000000                
+                                 		.SECTION	B,DATA,ALIGN=4
+00000000                         _tx_dataframe:
+00000000(00000010H)              		.blkl	4
+00000010                         _rx_dataframe:
+00000010(00000010H)              		.blkl	4
+00000020                         _remote_frame:
+00000020(00000010H)              		.blkl	4
+00000030                         _g_tx_id_default:
+00000030(00000004H)              		.blkl	1
+00000034                         _g_rx_id_default:
+00000034(00000004H)              		.blkl	1
+00000038                         _app_err_nr:
+00000038(00000004H)              		.blkl	1
+0000003C                         __$can_state:
+0000003C(00000008H)              		.blkl	2
+00000044                         __$nr_times_reached_busoff:
+00000044(00000008H)              		.blkl	2
+                                 		.END
+
+Information List
+
+TOTAL ERROR(S)    00000
+TOTAL WARNING(S)  00000
+TOTAL LINE(S)     02060   LINES
+
+Section List
+
+Attr         Size               Name
+CODE     0000002113(00000841H)  P
+ROMDATA  0000000139(0000008BH)  L
+ROMDATA  0000000036(00000024H)  D
+DATA     0000000076(0000004CH)  B
+
+Cpu Type
+
+-CPU=RX600
+
+Command Parameter
+
+-subcommand=C:\Users\fpolo\AppData\Local\Temp\$ccrx77D45D\$ccrx\api_demo.src.cmd
+    -nologo
+    -cpu=rx600
+    -fpu
+    -fint_register=0
+    -debug
+    -endian=little
+-listfile=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\api_demo.lst
+-output=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\api_demo.obj

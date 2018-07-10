@@ -1,0 +1,11 @@
+-input=".\src\api_demo.obj"
+-input=".\src\dbsct.obj"
+-input=".\src\hwsetup.obj"
+-input=".\src\intprg.obj"
+-input=".\src\lcd.obj"
+-input=".\src\r_can_api.obj"
+-input=".\src\resetprg.obj"
+-input=".\src\switches.obj"
+-input=".\src\vecttbl.obj"
+-library=".\KitTest010_CAN_3.lib"
+-start=B_1,R_1,B_2,R_2,B,R,SU,SI/01000,PResetPRG/0FFFF8000,C_1,C_2,C,C$*,L,D*,P,PIntPRG,CST*/0FFFF8100,FIXEDVECT/0FFFFFFD0

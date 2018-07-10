@@ -1,0 +1,920 @@
+* RX FAMILY ASSEMBLER V2.08.00.01 [06 Oct 2017] *  SOURCE LIST  Fri Jul 06 09:06:34 2018
+
+LOC.     OBJ.              0XMDA SOURCE STATEMENT
+
+                                 ;RX Family C/C++ Compiler (V2.08.00 [30 Nov 2017])  06-Jul-2018 09:06:34
+                                 
+                                 ;*** CPU TYPE ***
+                                 
+                                 ;-CPU=RX600
+                                 
+                                 ;*** COMMAND PARAMETER ***
+                                 
+                                 ;-output=src=switches.src
+                                 ;-cpu=rx600
+                                 ;-fpu
+                                 ;-include=C:\PROGRA~2\RENESA~1\CS_~1\CC\CC-RX\V208~1.00\include,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2,C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2
+                                 ;-define=NOT_DEBUG=1
+                                 ;-lang=c99
+                                 ;-nomessage
+                                 ;-change_message=information
+                                 ;-obj_path=src
+                                 ;-debug
+                                 ;-listfile=src/switches.lst
+                                 ;-show=source
+                                 ;-optimize=0
+                                 ;-speed
+                                 ;-nologo
+                                 ;switches.c
+                                 
+                                 		.glb	_tx_dataframe
+                                 		.glb	_rx_dataframe
+                                 		.glb	_app_err_nr
+                                 		.glb	_last_sw_data
+                                 		.glb	_fix_sw_data
+                                 		.glb	_last_fix_sw_data
+                                 		.glb	_sw_count
+                                 		.glb	_SwitchFuncTable
+                                 		.glb	_ReadSwitches
+                                 		.glb	_R_CAN_TxSet
+                                 		.glb	_DisplayString
+                                 		.glb	_LcdShow4DigHex
+                                 		.glb	_Delay
+                                 		.glb	_R_CAN_RxSet
+                                 ;LineNo. C-SOURCE STATEMENT
+                                 
+                                 		.SECTION	P,CODE
+00000000                         _ReadSwitches:
+                                 		.STACK	_ReadSwitches=8
+                                 ;       1 /******************************************************************************
+                                 ;       2 * DISCLAIMER
+                                 ;       3 
+                                 ;       4 * This software is supplied by Renesas Electronics Corp. and is only 
+                                 ;       5 * intended for use with Renesas products. No other uses are authorized.
+                                 ;       6 
+                                 ;       7 * This software is owned by Renesas Electronics Corp. and is protected under 
+                                 ;       8 * all applicable laws, including copyright laws.
+                                 ;       9 
+                                 ;      10 * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES 
+                                 ;      11 * REGARDING THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, 
+                                 ;      12 * INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+                                 ;      13 * PARTICULAR PURPOSE AND NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY 
+                                 ;      14 * DISCLAIMED.
+                                 ;      15 
+                                 ;      16 * TO THE MAXIMUM EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS 
+                                 ;      17 * ELECTRONICS CORP. NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+                                 ;      18 * FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES 
+                                 ;      19 * FOR ANY REASON RELATED TO THIS SOFTWARE, EVEN IF RENESAS OR ITS 
+                                 ;      20 * AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+                                 ;      21 
+                                 ;      22 * Renesas reserves the right, without notice, to make changes to this 
+                                 ;      23 * software and to discontinue the availability of this software.  
+                                 ;      24 * By using this software, you agree to the additional terms and 
+                                 ;      25 * conditions found by accessing the following link:
+                                 ;      26 * http://www.renesas.com/disclaimer
+                                 ;      27 ******************************************************************************
+                                 ;      28 * Copyright (C) 2010. Renesas Electronics Corp., All Rights Reserved.
+                                 ;      29 ******************************************************************************
+                                 ;      30 File: SWITCHES.C
+                                 ;      31 
+                                 ;      32 For CAN API demo.
+                                 ;      33 
+                                 ;      34 Revision History
+                                 ;      35 Date        OSO-UID     Description
+                                 ;      36 Nov 1 '08   RTA-CSS     For CAN-D-Kit version 3.00.
+                                 ;      37 Mar 22 '10  RTA-CSS  	For RX62N with new CAN API.
+                                 ;      38 Dec 06 2011             Updated to support CAN extended ID mode.         
+                                 ;      39 ******************************************************************************/
+                                 ;      40   
+                                 ;      41 /******************************************************************************
+                                 ;      42 Includes   <System Includes> , "Project Includes"
+                                 ;      43 ******************************************************************************/
+                                 ;      44 #include <machine.h>
+                                 ;      45 /* Following header file provides a structure to access on-chip I/O registers.*/
+                                 ;      46 #include "iodefine.h"
+                                 ;      47 #include "rdkrx62n.h"
+                                 ;      48 #include "config_r_can_rapi.h"
+                                 ;      49 #include "api_demo.h"
+                                 ;      50 #include "r_can_api.h"
+                                 ;      51 #include "switches.h"
+                                 ;      52 #include "lcd.h"
+                                 ;      53 
+                                 ;      54 /******************************************************************************
+                                 ;      55 Typedef definitions
+                                 ;      56 ******************************************************************************/
+                                 ;      57 /******************************************************************************
+                                 ;      58 Macro definitions
+                                 ;      59 ******************************************************************************/
+                                 ;      60 /**********************************************************************************
+                                 ;      61 User Defines
+                                 ;      62 ***********************************************************************************/
+                                 ;      63 /* SWITCHES. SW1 is p4_0, SW2 is p4_1, SW3 is p4_2. */
+                                 ;      64 /* Switch combination byte patterns */
+                                 ;      65 #define     RSK_RX62N_SW1_MASK		0x01//0b00000001  /* Switch 1 mask */
+                                 ;      66 #define     RSK_RX62N_SW2_MASK		0x02//0b00000010  /* Switch 2 mask */
+                                 ;      67 #define     RSK_RX62N_SW3_MASK		0x04//0b00000100  /* Switch 3 mask */
+                                 ;      68 #define     RSK_RX62N_SW23_MASK		0x06//0b00000110  /* Switch 2 & 3 mask */
+                                 ;      69 #define     RSK_RX62N_SW12_MASK		0x03//0b00000011  /* Switch 1 & 2 mask */
+                                 ;      70 #define     RSK_RX62N_SW123_MASK 	0x07//0b00000111  /* All Switches mask */
+                                 ;      71 #define     RSK_RX62N_SW_NONE		0x07//0b00000111  /* No Switch */
+                                 ;      72 //#define     RSK_RX62N_SW_ALL	    0b00000000  /* All switches */
+                                 ;      73 #define     RSK_RX62N_SW1	    	0x06//0b00000110  /* Switch 1 pressed only */
+                                 ;      74 #define     RSK_RX62N_SW2			0x05//0b00000101  /* Switch 2 pressed only */
+                                 ;      75 #define     RSK_RX62N_SW3			0x03//0b00000011  /* Switch 3 pressed only */
+                                 ;      76 #define     RSK_RX62N_SW23			0x01//0b00000001  /* Switch 3 & 2 pressed only */
+                                 ;      77 
+                                 ;      78 /* Nr times switch-poll must match */
+                                 ;      79 #define     SW_COUNT  	    2
+                                 ;      80 /* Switch func. table */
+                                 ;      81 #define     SW_TBL_SIZE     6
+                                 ;      82 
+                                 ;      83 /******************************************************************************
+                                 ;      84 Global variables and functions imported (externs)
+                                 ;      85 ******************************************************************************/
+                                 ;      86 /* Data */
+                                 ;      87 /* Functions */
+                                 ;      88 /******************************************************************************
+                                 ;      89 Constant definitions
+                                 ;      90 *****************************************************************************/
+                                 ;      91 /******************************************************************************
+                                 ;      92 Global variables and functions exported
+                                 ;      93 ******************************************************************************/
+                                 ;      94 /* Data */
+                                 ;      95 /* Functions */
+                                 ;      96 /******************************************************************************
+                                 ;      97 Global variables and functions private to the file
+                                 ;      98 ******************************************************************************/
+                                 ;      99 /* Data */
+                                 ;     100 /* Switch */
+                                 ;     101 uint8_t last_sw_data;         /* Last switch data */
+                                 ;     102 uint8_t fix_sw_data;          /* Fixed switch data */
+                                 ;     103 uint8_t last_fix_sw_data;     /* Last fixed switch data */
+                                 ;     104 uint8_t sw_count;             /* Switch counter */
+                                 ;     105 
+                                 ;     106 /* Functions */
+                                 ;     107 static uint8_t AreSwitchesStable(uint8_t);
+                                 ;     108 static uint8_t SwitchDecode(void);
+                                 ;     109 static void SwNoneFunc(void);
+                                 ;     110 static void Sw1Func(void);
+                                 ;     111 static void Sw2Func(void);
+                                 ;     112 static void Sw3Func(void);
+                                 ;     113 static void Sw23Func(void);
+                                 ;     114 static void Sw32Func(void);
+                                 ;     115 
+                                 ;     116 /* An array of constant pointers to the switch functions */
+                                 ;     117 void (* const SwitchFuncTable[SW_TBL_SIZE])(void) = {   SwNoneFunc,
+                                 ;     118                                                         Sw1Func, 
+                                 ;     119                                                         Sw2Func, 
+                                 ;     120                                                         Sw3Func, 
+                                 ;     121                                                         Sw32Func, 
+                                 ;     122                                                         Sw23Func   };
+                                 ;     123 
+                                 ;     124 /**********************************************************************************
+                                 ;     125 User Program Code
+                                 ;     126 ***********************************************************************************/
+                                 ;     127 
+                                 ;     128 /*****************************************************************************
+                                 ;     129 Name:          ReadSwitches
+                                 ;     130 Parameters:    -
+                                 ;     131 Returns:       -
+                                 ;     132 Description:   Switch function
+                                 ;     133 *****************************************************************************/
+                                 ;     134 void ReadSwitches(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",134
+00000000 6040                    		SUB #04H, R0
+                                 ;     135 {
+                                 ;     136     uint8_t i, current_sw_pos = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",136
+00000002 3C0200                  		MOV.B #00H, 02H[R0]
+00000005                         L14:	; entry.split
+00000005 FBEE44C008              		MOV.L #0008C044H, R14
+                                 ;     137 
+                                 ;     138 	/* Build a switch byte pattern */
+                                 ;     139 	current_sw_pos = PORT4.PORT.BYTE & RSK_RX62N_SW123_MASK;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",139
+0000000A 58E1                    		MOVU.B [R14], R1
+0000000C 6471                    		AND #07H, R1
+0000000E 8081                    		MOV.B R1, 02H[R0]
+00000010                         L15:	; entry.split1
+                                 ;     140 
+                                 ;     141     if (AreSwitchesStable(current_sw_pos)) 
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",141
+00000010 B081                    		MOVU.B 02H[R0], R1
+00000012 39rrrr               W  		BSR __$AreSwitchesStable
+00000015 6101                    		CMP #00H, R1
+00000017 20rr                    		BEQ L20
+00000019                         L16:	; if_then_bb
+                                 ;     142 	{
+                                 ;     143         /* Switch pressed, find out which */
+                                 ;     144 		i = SwitchDecode();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",144
+00000019 39rrrr               W  		BSR __$SwitchDecode
+0000001C 8089                    		MOV.B R1, 03H[R0]
+0000001E                         L17:	; if_then_bb.split
+                                 ;     145         if (i < SW_TBL_SIZE)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",145
+0000001E B089                    		MOVU.B 03H[R0], R1
+00000020 6151                    		CMP #05H, R1
+00000022 2Arr                    		BGT L19
+00000024                         L18:	; if_then_bb17
+                                 ;     146 		{   /* Switch function table. Call the corresponding switch func */
+                                 ;     147             SwitchFuncTable[i]();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",147
+00000024 FBE2rrrrrrrr            		MOV.L #_SwitchFuncTable, R14
+0000002A B089                    		MOVU.B 03H[R0], R1
+0000002C FE61EE                  		MOV.L [R1,R14], R14
+0000002F 7F1E                    		JSR R14
+00000031 6701                    		RTSD #04H
+00000033                         L19:	; if_else_bb
+                                 ;     148         }
+                                 ;     149         else
+                                 ;     150         {
+                                 ;     151             app_err_nr |= APP_TABLE_ERR;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",151
+00000033 FBE2rrrrrrrr            		MOV.L #_app_err_nr, R14
+00000039 ECEF                    		MOV.L [R14], R15
+0000003B 782F                    		BSET #02H, R15
+0000003D E3EF                    		MOV.L R15, [R14]
+0000003F 6701                    		RTSD #04H
+00000041                         L20:	; return
+                                 ;     152         }
+                                 ;     153 	}
+                                 ;     154 }
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",154
+00000041 6701                    		RTSD #04H
+00000043                         __$AreSwitchesStable:
+                                 		.STACK	__$AreSwitchesStable=12
+                                 ;     155 
+                                 ;     156 /*****************************************************************************
+                                 ;     157 Name:          sw_func
+                                 ;     158 Parameters:    Current switch 1-3 positions.
+                                 ;     159 Returns:       switches_stable. 1 = stable change. 0 - no stable change.
+                                 ;     160 Description:   Fix switch function, if ReadSwitches are fix (stable), copy value
+                                 ;     161 *****************************************************************************/
+                                 ;     162 uint8_t AreSwitchesStable(uint8_t current_sw_pos)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",162
+00000043 6080                    		SUB #08H, R0
+00000045 8189                    		MOV.B R1, 07H[R0]
+                                 ;     163 {
+                                 ;     164     uint8_t switches_stable = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",164
+00000047 3C0500                  		MOV.B #00H, 05H[R0]
+0000004A                         L22:	; entry.split
+                                 ;     165     
+                                 ;     166     /* If switches have changed, time the change. */
+                                 ;     167     if ((fix_sw_data != current_sw_pos) && (last_sw_data == current_sw_pos))
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",167
+0000004A FBE2rrrrrrrr            		MOV.L #_fix_sw_data, R14
+00000050 58EE                    		MOVU.B [R14], R14
+00000052 450E07                  		CMP 07H[R0].UB, R14
+00000055 20rr                    		BEQ L25
+00000057                         L23:	; bb
+00000057 FBE2rrrrrrrr            		MOV.L #_last_sw_data, R14
+0000005D 58EE                    		MOVU.B [R14], R14
+0000005F 450E07                  		CMP 07H[R0].UB, R14
+00000062 18                   S  		BNE L25
+00000063                         L24:	; bb14
+00000063 F80601                  		MOV.L #00000001H, [R0]
+00000066 08                   S  		BRA L26
+00000067                         L25:	; bb15
+00000067 F80600                  		MOV.L #00000000H, [R0]
+0000006A                         L26:	; bb16
+0000006A EC01                    		MOV.L [R0], R1
+0000006C 6101                    		CMP #00H, R1
+0000006E 20rr                    		BEQ L32
+00000070                         L27:	; if_then_bb
+                                 ;     168 	{
+                                 ;     169         sw_count++;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",169
+00000070 FBE2rrrrrrrr            		MOV.L #_sw_count, R14
+00000076 58EF                    		MOVU.B [R14], R15
+00000078 621F                    		ADD #01H, R15
+0000007A C3EF                    		MOV.B R15, [R14]
+0000007C                         L28:	; if_then_bb.split
+                                 ;     170     	/* If ReadSwitches are stable, copy value */
+                                 ;     171         if (sw_count > SW_COUNT)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",171
+0000007C FBE2rrrrrrrr            		MOV.L #_sw_count, R14
+00000082 58EE                    		MOVU.B [R14], R14
+00000084 613E                    		CMP #03H, R14
+00000086 29rr                    		BLT L33
+00000088                         L29:	; if_then_bb27
+                                 ;     172     	{
+                                 ;     173             fix_sw_data = current_sw_pos;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",173
+00000088 B189                    		MOVU.B 07H[R0], R1
+0000008A FBE2rrrrrrrr            		MOV.L #_fix_sw_data, R14
+00000090 C3E1                    		MOV.B R1, [R14]
+00000092                         L30:	; if_then_bb27.split
+                                 ;     174             sw_count = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",174
+00000092 FBE2rrrrrrrr            		MOV.L #_sw_count, R14
+00000098 F8E400                  		MOV.B #00H, [R14]
+0000009B                         L31:	; if_then_bb27.split1
+                                 ;     175             switches_stable = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",175
+0000009B 3C0501                  		MOV.B #01H, 05H[R0]
+0000009E 08                   S  		BRA L33
+0000009F                         L32:	; if_else_bb
+                                 ;     176         }
+                                 ;     177     }
+                                 ;     178     else
+                                 ;     179 	{
+                                 ;     180         sw_count = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",180
+0000009F FBE2rrrrrrrr            		MOV.L #_sw_count, R14
+000000A5 F8E400                  		MOV.B #00H, [R14]
+000000A8                         L33:	; if_break_bb29
+                                 ;     181     }
+                                 ;     182     
+                                 ;     183     last_sw_data = current_sw_pos;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",183
+000000A8 B189                    		MOVU.B 07H[R0], R1
+000000AA FBE2rrrrrrrr            		MOV.L #_last_sw_data, R14
+000000B0 C3E1                    		MOV.B R1, [R14]
+000000B2                         L34:	; if_break_bb29.split
+                                 ;     184     return switches_stable;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",184
+000000B2 C5000506                		MOV.B 05H[R0], 06H[R0]
+000000B6 B181                    		MOVU.B 06H[R0], R1
+000000B8                         L35:	; if_break_bb29.split2
+                                 ;     185 }/* end AreSwitchesStable() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",185
+000000B8 6702                    		RTSD #08H
+000000BA                         __$SwitchDecode:
+                                 		.STACK	__$SwitchDecode=8
+                                 ;     186 
+                                 ;     187 /*****************************************************************************
+                                 ;     188 Name:          SwitchDecode
+                                 ;     189 Parameters:    -
+                                 ;     190 Returns:       -
+                                 ;     191 Description:   Decodes which switch has been pressed
+                                 ;     192 *****************************************************************************/
+                                 ;     193 uint8_t SwitchDecode(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",193
+000000BA 6040                    		SUB #04H, R0
+                                 ;     194 {
+                                 ;     195     uint8_t switch_func_nr = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",195
+000000BC 3C0200                  		MOV.B #00H, 02H[R0]
+000000BF                         L37:	; entry.split
+                                 ;     196     
+                                 ;     197     switch (fix_sw_data)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",197
+000000BF FBE2rrrrrrrr            		MOV.L #_fix_sw_data, R14
+000000C5 58EE                    		MOVU.B [R14], R14
+000000C7 611E                    		CMP #01H, R14
+000000C9 20rr                    		BEQ L52
+000000CB                         L38:	; entry.split
+000000CB 613E                    		CMP #03H, R14
+000000CD 20rr                    		BEQ L49
+000000CF                         L39:	; entry.split
+000000CF 615E                    		CMP #05H, R14
+000000D1 20rr                    		BEQ L46
+000000D3                         L40:	; entry.split
+000000D3 616E                    		CMP #06H, R14
+000000D5 10                   S  		BEQ L43
+000000D6                         L41:	; entry.split
+000000D6 617E                    		CMP #07H, R14
+000000D8 21rr                    		BNE L57
+000000DA                         L42:	; switch_clause_bb
+                                 ;     198 	{
+                                 ;     199         /* No switch */
+                                 ;     200 		case RSK_RX62N_SW_NONE:
+                                 ;     201             switch_func_nr = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",201
+000000DA 3C0200                  		MOV.B #00H, 02H[R0]
+000000DD 2Err                 B  		BRA L58
+000000DF                         L43:	; switch_clause_bb3
+                                 ;     202             break;
+                                 ;     203 
+                                 ;     204         /* SW1 */
+                                 ;     205 		case RSK_RX62N_SW1:
+                                 ;     206             if (last_fix_sw_data == RSK_RX62N_SW_NONE)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",206
+000000DF FBE2rrrrrrrr            		MOV.L #_last_fix_sw_data, R14
+000000E5 58EE                    		MOVU.B [R14], R14
+000000E7 617E                    		CMP #07H, R14
+000000E9 18                   S  		BNE L45
+000000EA                         L44:	; if_then_bb
+                                 ;     207                 switch_func_nr = 1;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",207
+000000EA 3C0201                  		MOV.B #01H, 02H[R0]
+000000ED 2Err                 B  		BRA L58
+000000EF                         L45:	; if_else_bb
+                                 ;     208             else
+                                 ;     209                 switch_func_nr = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",209
+000000EF 3C0200                  		MOV.B #00H, 02H[R0]
+000000F2 2Err                 B  		BRA L58
+000000F4                         L46:	; switch_clause_bb8
+                                 ;     210             break;
+                                 ;     211 
+                                 ;     212         /* SW2 */
+                                 ;     213 		case RSK_RX62N_SW2:
+                                 ;     214             /* Don't call Switch 2 again after '23' until user has realeased SW2 */
+                                 ;     215             if (last_fix_sw_data == RSK_RX62N_SW_NONE)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",215
+000000F4 FBE2rrrrrrrr            		MOV.L #_last_fix_sw_data, R14
+000000FA 58EE                    		MOVU.B [R14], R14
+000000FC 617E                    		CMP #07H, R14
+000000FE 18                   S  		BNE L48
+000000FF                         L47:	; if_then_bb14
+                                 ;     216     	        switch_func_nr = 2;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",216
+000000FF 3C0202                  		MOV.B #02H, 02H[R0]
+00000102 2Err                 B  		BRA L58
+00000104                         L48:	; if_else_bb15
+                                 ;     217 			else if (last_fix_sw_data == RSK_RX62N_SW23)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",217
+00000104 3C0200                  		MOV.B #00H, 02H[R0]
+00000107 2Err                 B  		BRA L58
+00000109                         L49:	; switch_clause_bb25
+                                 ;     218                 switch_func_nr = 0; /* SwDummyFunc */
+                                 ;     219             else
+                                 ;     220                 switch_func_nr = 0;
+                                 ;     221             break;
+                                 ;     222         /* SW3 */
+                                 ;     223 		case RSK_RX62N_SW3:
+                                 ;     224             /* Don't call Switch 3 after '32' again until user has realeased SW3 */
+                                 ;     225             if (last_fix_sw_data == RSK_RX62N_SW_NONE)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",225
+00000109 FBE2rrrrrrrr            		MOV.L #_last_fix_sw_data, R14
+0000010F 58EE                    		MOVU.B [R14], R14
+00000111 617E                    		CMP #07H, R14
+00000113 18                   S  		BNE L51
+00000114                         L50:	; if_then_bb31
+                                 ;     226 	            switch_func_nr = 3;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",226
+00000114 3C0203                  		MOV.B #03H, 02H[R0]
+00000117 2Err                 B  		BRA L58
+00000119                         L51:	; if_else_bb32
+                                 ;     227 			else if (last_fix_sw_data == RSK_RX62N_SW23)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",227
+00000119 3C0200                  		MOV.B #00H, 02H[R0]
+0000011C 2Err                 B  		BRA L58
+0000011E                         L52:	; switch_clause_bb42
+                                 ;     228                 switch_func_nr = 0; /* SwDummyFunc */
+                                 ;     229             else
+                                 ;     230                 switch_func_nr = 0;
+                                 ;     231             break;
+                                 ;     232 		/* SW1 & SW2 */
+                                 ;     233 		case RSK_RX62N_SW23:
+                                 ;     234         	/* SW1 --> SW2 */
+                                 ;     235             if (last_fix_sw_data == RSK_RX62N_SW3)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",235
+0000011E FBE2rrrrrrrr            		MOV.L #_last_fix_sw_data, R14
+00000124 58EE                    		MOVU.B [R14], R14
+00000126 613E                    		CMP #03H, R14
+00000128 18                   S  		BNE L54
+00000129                         L53:	; if_then_bb49
+                                 ;     236                 switch_func_nr = 4;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",236
+00000129 3C0204                  		MOV.B #04H, 02H[R0]
+0000012C 2Err                 B  		BRA L58
+0000012E                         L54:	; if_else_bb50
+                                 ;     237 			/* SW2 --> SW1 */
+                                 ;     238 		    else if (last_fix_sw_data == RSK_RX62N_SW2)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",238
+0000012E FBE2rrrrrrrr            		MOV.L #_last_fix_sw_data, R14
+00000134 58EE                    		MOVU.B [R14], R14
+00000136 615E                    		CMP #05H, R14
+00000138 18                   S  		BNE L56
+00000139                         L55:	; if_then_bb56
+                                 ;     239                 switch_func_nr = 5;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",239
+00000139 3C0205                  		MOV.B #05H, 02H[R0]
+0000013C 08                   S  		BRA L58
+0000013D                         L56:	; if_else_bb57
+                                 ;     240             else
+                                 ;     241                 switch_func_nr = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",241
+0000013D 3C0200                  		MOV.B #00H, 02H[R0]
+00000140 08                   S  		BRA L58
+00000141                         L57:	; switch_clause_bb60
+                                 ;     242             break;
+                                 ;     243         default:
+                                 ;     244             switch_func_nr = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",244
+00000141 3C0200                  		MOV.B #00H, 02H[R0]
+00000144                         L58:	; switch_break_bb
+                                 ;     245             break;
+                                 ;     246     }
+                                 ;     247     
+                                 ;     248     last_fix_sw_data = fix_sw_data;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",248
+00000144 FBE2rrrrrrrr            		MOV.L #_fix_sw_data, R14
+0000014A 58EE                    		MOVU.B [R14], R14
+0000014C FBF2rrrrrrrr            		MOV.L #_last_fix_sw_data, R15
+00000152 C3FE                    		MOV.B R14, [R15]
+00000154                         L59:	; switch_break_bb.split
+                                 ;     249     return switch_func_nr;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",249
+00000154 C5000203                		MOV.B 02H[R0], 03H[R0]
+00000158 B089                    		MOVU.B 03H[R0], R1
+0000015A                         L60:	; switch_break_bb.split1
+                                 ;     250 }/* end SwitchDecode() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",250
+0000015A 6701                    		RTSD #04H
+0000015C                         __$Sw1Func:
+                                 		.STACK	__$Sw1Func=4
+                                 ;     251 
+                                 ;     252 /*****************************************************************************
+                                 ;     253 Name:          Sw1Func
+                                 ;     254 Parameters:    -
+                                 ;     255 Returns:       -
+                                 ;     256 Description:   Switch 1. Sends a test CAN frame.
+                                 ;     257 			   A-D Demo.
+                                 ;     258 *****************************************************************************/
+                                 ;     259 void Sw1Func(void)
+                                 ;     260 {
+                                 ;     261     #if TEST_FIFO
+                                 ;     262         uint8_t	i = 0;
+                                 ;     263     #endif
+                                 ;     264     
+                                 ;     265     /* Inc. 1st databyte for show. */
+                                 ;     266 	tx_dataframe.data[0]++;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",266
+0000015C FB12rrrrrrrr            		MOV.L #_tx_dataframe, R1
+00000162 B11A                    		MOVU.B 05H[R1], R2
+00000164 6212                    		ADD #01H, R2
+00000166 811A                    		MOV.B R2, 05H[R1]
+00000168                         L62:	; entry.split1
+                                 ;     267 	
+                                 ;     268 	if (FRAME_ID_MODE == STD_ID_MODE )
+                                 ;     269     {
+                                 ;     270         R_CAN_TxSet(0, CANBOX_TX, &tx_dataframe, DATA_FRAME);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",270
+00000168 FB32rrrrrrrr            		MOV.L #_tx_dataframe, R3
+0000016E 6612                    		MOV.L #00000001H, R2
+00000170 6601                    		MOV.L #00000000H, R1
+00000172 EF14                    		MOV.L R1, R4
+00000174 05rrrrrr             A  		BSR _R_CAN_TxSet
+00000178 02                      		RTS
+00000179                         __$Sw2Func:
+                                 		.STACK	__$Sw2Func=8
+                                 ;     271     }
+                                 ;     272     else
+                                 ;     273     {   /* Extended ID mode. */
+                                 ;     274         R_CAN_TxSetXid(0, CANBOX_TX, &tx_dataframe, DATA_FRAME);        
+                                 ;     275     }
+                                 ;     276 
+                                 ;     277 	#if TEST_FIFO
+                                 ;     278     /* Send three more to fill FIFO. */
+                                 ;     279     for (i == 0; i < 4; i++)
+                                 ;     280     {
+                                 ;     281         if (FRAME_ID_MODE == STD_ID_MODE )
+                                 ;     282         {
+                                 ;     283     	    R_CAN_TxSetFifo(0, &tx_fifo_dataframe, DATA_FRAME);
+                                 ;     284         }
+                                 ;     285         else
+                                 ;     286         {
+                                 ;     287 		    R_CAN_TxSetFifoXid(0, &tx_fifo_dataframe, DATA_FRAME);
+                                 ;     288         }
+                                 ;     289     }
+                                 ;     290     #ifdef USE_CAN_POLL
+                                 ;     291         /* This flag will not be set by TX FIFO interrupt, so set it here. */
+                                 ;     292         tx_fifo_flag = 1;
+                                 ;     293     #endif
+                                 ;     294     #endif
+                                 ;     295 }/* end Sw1Func() */
+                                 ;     296 
+                                 ;     297 /*****************************************************************************
+                                 ;     298 Name:          Sw2Func
+                                 ;     299 Parameters:    -
+                                 ;     300 Returns:       -
+                                 ;     301 Description:   Switch 2. Shows test frame CAN TxID. 
+                                 ;     302 *****************************************************************************/
+                                 ;     303 void Sw2Func(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",303
+00000179 6040                    		SUB #04H, R0
+                                 ;     304 {
+                                 ;     305     uint32_t txid = (tx_dataframe.id & 0x1FFFFFFF);     /* Keep only extended ID bits. */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",305
+0000017B FBE2rrrrrrrr            		MOV.L #_tx_dataframe, R14
+00000181 ECE1                    		MOV.L [R14], R1
+00000183 7421FFFFFF1F            		AND #1FFFFFFFH, R1
+00000189 E301                    		MOV.L R1, [R0]
+0000018B                         L64:	; entry.split
+                                 ;     306     
+                                 ;     307 	DisplayString(LCD_LINE1,"Tx ID:  ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",307
+0000018B FB22rrrrrrrr            		MOV.L #_L10, R2
+00000191 6601                    		MOV.L #00000000H, R1
+00000193 05rrrrrr             A  		BSR _DisplayString
+00000197                         L65:	; entry.split1
+                                 ;     308     DisplayString(LCD_LINE2,"        ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",308
+00000197 FB22rrrrrrrr            		MOV.L #_L11, R2
+0000019D 754110                  		MOV.L #00000010H, R1
+000001A0 05rrrrrr             A  		BSR _DisplayString
+000001A4                         L66:	; entry.split3
+                                 ;     309 
+                                 ;     310     if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     311     {
+                                 ;     312 	    LcdShow4DigHex((uint8_t)(txid >> 8), (uint8_t)txid, 16);         
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",312
+000001A4 EC01                    		MOV.L [R0], R1
+000001A6 5B12                    		MOVU.B R1, R2
+000001A8 5F11                    		MOVU.W R1, R1
+000001AA 6881                    		SHLR #08H, R1
+000001AC 754310                  		MOV.L #00000010H, R3
+000001AF 05rrrrrr             A  		BSR _LcdShow4DigHex
+000001B3                         L67:	; entry.split4
+000001B3 FB1E000020              		MOV.L #00200000H, R1
+                                 ;     313     }
+                                 ;     314     else
+                                 ;     315     {
+                                 ;     316 	    /* Showing all 4 bytes of ID variable in order to support extended ID. */
+                                 ;     317 	    LcdShow4DigHex((uint8_t)(txid >> 24), (uint8_t)(txid >> 16), 16);
+                                 ;     318 	    LcdShow4DigHex((uint8_t)(txid >> 8), (uint8_t)txid, 20);  
+                                 ;     319     }
+                                 ;     320 
+                                 ;     321     Delay(0x200000);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",321
+000001B8 05rrrrrr             A  		BSR _Delay
+000001BC 6701                    		RTSD #04H
+000001BE                         __$Sw3Func:
+                                 		.STACK	__$Sw3Func=8
+                                 ;     322 }/* end Sw2Func() */
+                                 ;     323 
+                                 ;     324 /*****************************************************************************
+                                 ;     325 Name:          	Sw3Func
+                                 ;     326 Parameters:    	-
+                                 ;     327 Returns:       	-
+                                 ;     328 Description:   	Switch 3. Shows test frame CAN RxID. 
+                                 ;     329 				If you are using a CAN filter mask, the incoming data ID 
+                                 ;     330 				may have overwritten what was set by the user with SW2 & 3.
+                                 ;     331 				Also RESETS any ERRORS.
+                                 ;     332 *****************************************************************************/
+                                 ;     333 void Sw3Func(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",333
+000001BE 6040                    		SUB #04H, R0
+                                 ;     334 {
+                                 ;     335     uint32_t rxid = rx_dataframe.id;     
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",335
+000001C0 FBE2rrrrrrrr            		MOV.L #_rx_dataframe, R14
+000001C6 E0E0                    		MOV.L [R14], [R0]
+000001C8                         L69:	; entry.split
+                                 ;     336     
+                                 ;     337 	DisplayString(LCD_LINE1,"Rx ID:  ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",337
+000001C8 FB22rrrrrrrr            		MOV.L #_L12, R2
+000001CE 6601                    		MOV.L #00000000H, R1
+000001D0 05rrrrrr             A  		BSR _DisplayString
+000001D4                         L70:	; entry.split1
+                                 ;     338 	DisplayString(LCD_LINE2,"        ");
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",338
+000001D4 FB22rrrrrrrr            		MOV.L #_L11, R2
+000001DA 754110                  		MOV.L #00000010H, R1
+000001DD 05rrrrrr             A  		BSR _DisplayString
+000001E1                         L71:	; entry.split3
+                                 ;     339 
+                                 ;     340     if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     341     {
+                                 ;     342 	    LcdShow4DigHex((uint8_t)(rxid >> 8), (uint8_t)rxid, 16);         
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",342
+000001E1 EC01                    		MOV.L [R0], R1
+000001E3 5B12                    		MOVU.B R1, R2
+000001E5 5F11                    		MOVU.W R1, R1
+000001E7 6881                    		SHLR #08H, R1
+000001E9 754310                  		MOV.L #00000010H, R3
+000001EC 05rrrrrr             A  		BSR _LcdShow4DigHex
+000001F0                         L72:	; entry.split4
+000001F0 FB1E000020              		MOV.L #00200000H, R1
+                                 ;     343     }
+                                 ;     344     else
+                                 ;     345     {
+                                 ;     346 	    /* Showing all 4 bytes of ID variable in order to support extended ID. */
+                                 ;     347 	    LcdShow4DigHex((uint8_t)(rxid >> 24), (uint8_t)(rxid >> 16), 16);
+                                 ;     348 	    LcdShow4DigHex((uint8_t)(rxid >> 8), (uint8_t)rxid, 20);  
+                                 ;     349     }
+                                 ;     350     
+                                 ;     351     Delay(0x200000);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",351
+000001F5 05rrrrrr             A  		BSR _Delay
+000001F9 6701                    		RTSD #04H
+000001FB                         __$Sw23Func:
+                                 		.STACK	__$Sw23Func=4
+                                 ;     352 
+                                 ;     353     //ResetAllErrors();
+                                 ;     354 }/* end Sw3Func() */
+                                 ;     355 
+                                 ;     356 /*****************************************************************************
+                                 ;     357 Name:          	Sw23Func
+                                 ;     358 Parameters:    	-
+                                 ;     359 Returns:       	-
+                                 ;     360 Description:   	2 then 3 pressed. Increments CAN TX-ID.
+                                 ;     361 *****************************************************************************/
+                                 ;     362 void Sw23Func(void)
+                                 ;     363 {
+                                 ;     364     /* Inc. transmit ID */
+                                 ;     365     tx_dataframe.id++;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",365
+000001FB FBE2rrrrrrrr            		MOV.L #_tx_dataframe, R14
+00000201 ECEF                    		MOV.L [R14], R15
+00000203 621F                    		ADD #01H, R15
+00000205 E3EF                    		MOV.L R15, [R14]
+00000207                         L74:	; entry.split1
+                                 ;     366     
+                                 ;     367     if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     368     {
+                                 ;     369         if (tx_dataframe.id > 0x7FF)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",369
+00000207 FBE2rrrrrrrr            		MOV.L #_tx_dataframe, R14
+0000020D ECEE                    		MOV.L [R14], R14
+0000020F 760E0008                		CMP #0800H, R14
+00000213 23rr                    		BLTU L76
+00000215                         L75:	; if_then_bb5
+                                 ;     370 	    {
+                                 ;     371             tx_dataframe.id = 0x01;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",371
+00000215 FBE2rrrrrrrr            		MOV.L #_tx_dataframe, R14
+0000021B F8E601                  		MOV.L #00000001H, [R14]
+0000021E                         L76:	; if_break_bb12
+                                 ;     372         }        		
+                                 ;     373     }
+                                 ;     374     else
+                                 ;     375     {   /* Extended or Mixed ID mode. */
+                                 ;     376         if (tx_dataframe.id > 0x1FFFFFFF)
+                                 ;     377 	    {
+                                 ;     378             tx_dataframe.id = 0x01;
+                                 ;     379         }            
+                                 ;     380     }    
+                                 ;     381     
+                                 ;     382 
+                                 ;     383     Sw2Func();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",383
+0000021E 39rrrr               W  		BSR __$Sw2Func
+00000221 02                      		RTS
+00000222                         __$Sw32Func:
+                                 		.STACK	__$Sw32Func=4
+                                 ;     384 }/* end Sw23Func() */
+                                 ;     385 
+                                 ;     386 /*****************************************************************************
+                                 ;     387 Name:          	Sw32Func
+                                 ;     388 Parameters:    	-
+                                 ;     389 Returns:       	-
+                                 ;     390 Description:   	3 then 2 pressed. Increments CAN RX-ID.
+                                 ;     391 *****************************************************************************/
+                                 ;     392 void Sw32Func(void)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",392
+00000222 FBEE240809              		MOV.L #00090824H, R14
+                                 ;     393 {
+                                 ;     394     /* When adjusting rx id, stop all transmission 
+                                 ;     395     abort_trm_can(CANBOX_TX);   */
+                                 ;     396 
+                                 ;     397 	/* If InvalData is flagged we are still receiving. Skip and come back. */
+                                 ;     398     if (CAN0.MCTL[CANBOX_RX].BIT.RX.INVALDATA == 0 )
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",398
+00000227 F4E1                    		BTST #01H, [R14].B
+00000229 21rr                    		BNE L84
+0000022B                         L78:	; if_then_bb
+0000022B FBEE240809              		MOV.L #00090824H, R14
+                                 ;     399 	{
+                                 ;     400         /* Stop receiving */
+                                 ;     401         CAN0.MCTL[CANBOX_RX].BYTE = 0;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",401
+00000230 F8E400                  		MOV.B #00H, [R14]
+00000233                         L79:	; if_then_bb.split
+                                 ;     402 	  
+                                 ;     403         rx_dataframe.id++;        /* Increment receive ID */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",403
+00000233 FBE2rrrrrrrr            		MOV.L #_rx_dataframe, R14
+00000239 ECEF                    		MOV.L [R14], R15
+0000023B 621F                    		ADD #01H, R15
+0000023D E3EF                    		MOV.L R15, [R14]
+0000023F                         L80:	; if_then_bb.split2
+                                 ;     404 
+                                 ;     405         if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     406         {
+                                 ;     407             if (rx_dataframe.id > 0x7FF)
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",407
+0000023F FBE2rrrrrrrr            		MOV.L #_rx_dataframe, R14
+00000245 ECEE                    		MOV.L [R14], R14
+00000247 760E0008                		CMP #0800H, R14
+0000024B 23rr                    		BLTU L82
+0000024D                         L81:	; if_then_bb13
+                                 ;     408 	        {
+                                 ;     409                 rx_dataframe.id = 0x01;
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",409
+0000024D FBE2rrrrrrrr            		MOV.L #_rx_dataframe, R14
+00000253 F8E601                  		MOV.L #00000001H, [R14]
+00000256                         L82:	; if_then_bb21.split
+                                 ;     410             }        		
+                                 ;     411         }
+                                 ;     412         else
+                                 ;     413         {   /* Extended or Mixed ID mode. */
+                                 ;     414             if (rx_dataframe.id > 0x1FFFFFFF)
+                                 ;     415 	        {
+                                 ;     416                 rx_dataframe.id = 0x01;
+                                 ;     417             }            
+                                 ;     418         } 
+                                 ;     419 
+                                 ;     420         /* Set new ID and start receiving */
+                                 ;     421         if (FRAME_ID_MODE == STD_ID_MODE)
+                                 ;     422         {		
+                                 ;     423             R_CAN_RxSet(0, CANBOX_RX, rx_dataframe.id, DATA_FRAME);
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",423
+00000256 FBE2rrrrrrrr            		MOV.L #_rx_dataframe, R14
+0000025C ECE3                    		MOV.L [R14], R3
+0000025E 6642                    		MOV.L #00000004H, R2
+00000260 6601                    		MOV.L #00000000H, R1
+00000262 EF14                    		MOV.L R1, R4
+00000264 05rrrrrr             A  		BSR _R_CAN_RxSet
+00000268                         L83:	; if_then_bb21.split3
+                                 ;     424         }
+                                 ;     425         else
+                                 ;     426         {   /* Extended or Mixed ID mode. */
+                                 ;     427             R_CAN_RxSetXid(0, CANBOX_RX, rx_dataframe.id, DATA_FRAME);            
+                                 ;     428         }
+                                 ;     429         
+                                 ;     430         Sw3Func();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",430
+00000268 39rrrr               W  		BSR __$Sw3Func
+0000026B 02                      		RTS
+0000026C                         L84:	; return
+                                 ;     431     }
+                                 ;     432 }/* end Sw32Func() */
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",432
+0000026C 02                      		RTS
+0000026D                         __$SwNoneFunc:
+                                 		.STACK	__$SwNoneFunc=4
+                                 ;     433 
+                                 ;     434 /*****************************************************************************
+                                 ;     435 Name:          SwNoneFunc
+                                 ;     436 Parameters:    -
+                                 ;     437 Returns:       -
+                                 ;     438 Description:   This function will run if no switch is pressed, or there is 
+                                 ;     439                no desirable switchfunction to run. Does nothing.
+                                 ;     440 *****************************************************************************/
+                                 ;     441 void SwNoneFunc(void)
+                                 ;     442 {
+                                 ;     443     nop();
+                                 		.LINE  "C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\switches.c",443
+0000026D 03                      		NOP
+0000026E 02                      		RTS
+                                 ;     444 }
+                                 ;     445 
+                                 ;     446 /* eof */
+                                 		.SECTION	C,ROMDATA,ALIGN=4
+00000000                         _SwitchFuncTable:
+00000000 rrrrrrrr                		.lword	__$SwNoneFunc
+00000004 rrrrrrrr                		.lword	__$Sw1Func
+00000008 rrrrrrrr                		.lword	__$Sw2Func
+0000000C rrrrrrrr                		.lword	__$Sw3Func
+00000010 rrrrrrrr                		.lword	__$Sw32Func
+00000014 rrrrrrrr                		.lword	__$Sw23Func
+                                 		.SECTION	L,ROMDATA,ALIGN=4
+00000000                         _L10:
+00000000 54782049                		.byte	"Tx ID:  "
+         443A2020                
+00000008 00                      		.byte	00H
+00000009                         _L11:
+00000009 20202020                		.byte	"        "
+         20202020                
+00000011 00                      		.byte	00H
+00000012                         _L12:
+00000012 52782049                		.byte	"Rx ID:  "
+         443A2020                
+0000001A 00                      		.byte	00H
+                                 		.SECTION	B_1,DATA
+00000000                         _last_sw_data:
+00000000(00000001H)              		.blkb	1
+00000001                         _fix_sw_data:
+00000001(00000001H)              		.blkb	1
+00000002                         _last_fix_sw_data:
+00000002(00000001H)              		.blkb	1
+00000003                         _sw_count:
+00000003(00000001H)              		.blkb	1
+                                 		.END
+
+Information List
+
+TOTAL ERROR(S)    00000
+TOTAL WARNING(S)  00000
+TOTAL LINE(S)     00883   LINES
+
+Section List
+
+Attr         Size               Name
+CODE     0000000623(0000026FH)  P
+ROMDATA  0000000024(00000018H)  C
+ROMDATA  0000000027(0000001BH)  L
+DATA     0000000004(00000004H)  B_1
+
+Cpu Type
+
+-CPU=RX600
+
+Command Parameter
+
+-subcommand=C:\Users\fpolo\AppData\Local\Temp\$ccrx138771C\$ccrx\switches.src.cmd
+    -nologo
+    -cpu=rx600
+    -fpu
+    -fint_register=0
+    -debug
+    -endian=little
+-listfile=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\switches.lst
+-output=C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\Debug\src\switches.obj

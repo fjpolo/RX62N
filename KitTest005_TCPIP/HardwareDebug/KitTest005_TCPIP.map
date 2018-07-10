@@ -1,0 +1,99 @@
+Renesas Optimizing Linker (W2.08.00 )             06-Jul-2018 07:42:03
+
+*** Options ***
+
+-library=C:\Users\fpolo\e2_studio\workspace\KitTest005_TCPIP\r_t4_rx\lib\T4_Library_rxv1_ether_little.lib
+-noprelink
+-subcommand=LinkerSubCommand.tmp
+-input=".\driver\ether_callback.obj"
+-input=".\driver\phy.obj"
+-input=".\driver\r_ether.obj"
+-input=".\driver\r_ether_setting_rx.obj"
+-input=".\driver\t4_driver.obj"
+-input=".\driver\timer.obj"
+-input=".\r_bsp/board/rskrx62n\dbsct.obj"
+-input=".\r_bsp/board/rskrx62n\hwsetup.obj"
+-input=".\r_bsp/board/rskrx62n\lowlvl.obj"
+-input=".\r_bsp/board/rskrx62n\lowsrc.obj"
+-input=".\r_bsp/board/rskrx62n\resetprg.obj"
+-input=".\r_bsp/board/rskrx62n\sbrk.obj"
+-input=".\r_bsp/board/rskrx62n\vecttbl.obj"
+-input=".\r_bsp/mcu/all\r_bsp_common.obj"
+-input=".\r_bsp/mcu/rx62n\cpu.obj"
+-input=".\r_bsp/mcu/rx62n\locking.obj"
+-input=".\r_bsp/mcu/rx62n\mcu_clocks.obj"
+-input=".\r_bsp/mcu/rx62n\mcu_init.obj"
+-input=".\r_bsp/mcu/rx62n\mcu_interrupts.obj"
+-input=".\r_bsp/mcu/rx62n\mcu_locks.obj"
+-input=".\r_cmt_rx/src\r_cmt_rx.obj"
+-input=".\r_sys_time_rx/src\r_sys_time_rx.obj"
+-input=".\src\main.obj"
+-input=".\src/tcp_blocking_sample\config_tcpudp.obj"
+-input=".\src/tcp_blocking_sample\echo_srv.obj"
+-library=".\KitTest005_TCPIP.lib"
+-start=B_ETHERNET_BUFFERS_1,B_RX_DESC,B_TX_DESC,SU,SI,B_1,R_1,B_2,R_2,B,R/0100,C_1,C_2,C,C$*,D*,W*,L,P/0FFF80000,FIXEDVECT/0FFFFFF80
+-output=KitTest005_TCPIP.abs
+-form=absolute
+-nomessage
+-vect=_undefined_interrupt_source_isr
+-list=KitTest005_TCPIP.map
+-nooptimize
+-rom=D=R,D_1=R_1,D_2=R_2
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+B_ETHERNET_BUFFERS_1
+                                  00000100  00000cff       c00   1
+B_RX_DESC
+                                  00000d00  00000d0f        10   4
+B_TX_DESC
+                                  00000d10  00000d1f        10   4
+SU
+                                  00000d20  00001d1f      1000   4
+SI
+                                  00001d20  0000251f       800   4
+B_1
+                                  00002520  00002555        36   1
+R_1
+                                  00002556  000025c7        72   1
+B_2
+                                  000025c8  00002611        4a   2
+R_2
+                                  00002612  00002613         2   2
+B
+                                  00002614  00004bd7      25c4   4
+R
+                                  00004bd8  00004e43       26c   4
+C_1
+                                  fff80000  fff80116       117   1
+C_2
+                                  fff80118  fff8032b       214   2
+C
+                                  fff8032c  fff80b63       838   4
+C$DSEC
+                                  fff80b64  fff80b87        24   4
+C$BSEC
+                                  fff80b88  fff80b9f        18   4
+C$VECT
+                                  fff80ba0  fff80f9f       400   4
+D_1
+                                  fff80fa0  fff81011        72   1
+D
+                                  fff81014  fff8127f       26c   4
+D_2
+                                  fff81280  fff81281         2   2
+W
+                                  fff81282  fff81282         0   1
+W_1
+                                  fff81282  fff81282         0   1
+W_2
+                                  fff81282  fff81282         0   1
+L
+                                  fff81284  fff81564       2e1   4
+P
+                                  fff81565  fff8ad46      97e2   1
+FIXEDVECT
+                                  ffffff80  ffffffff        80   4

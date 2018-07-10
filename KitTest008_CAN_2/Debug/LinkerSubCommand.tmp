@@ -1,0 +1,13 @@
+-input=".\src\api_demo.obj"
+-input=".\src\dbsct.obj"
+-input=".\src\hwsetup.obj"
+-input=".\src\intprg.obj"
+-input=".\src\lcd.obj"
+-input=".\src\r_can_api.obj"
+-input=".\src\resetprg.obj"
+-input=".\src\sbrk.obj"
+-input=".\src\switches.obj"
+-input=".\src\vecttbl.obj"
+-library="C:\Users\fpolo\e2_studio\workspace\KitTest008_CAN_2\src\GlyphLib.lib"
+-library=".\KitTest008_CAN_2.lib"
+-start=B_1,R_1,B_2,R_2,B,R,SU,SI/01000,PResetPRG/0FFFF8000,C_1,C_2,C,C$*,W*,L,D*,P,PIntPRG,CST*/0FFFF8100,FIXEDVECT/0FFFFFFD0

@@ -1,0 +1,348 @@
+[HIMDBVersion]
+2.0
+[DATABASE_VERSION]
+"2.8" 
+[PROJECT_DETAILS]
+"RX_uIP" "C:\WorkSpace\RX_uIP\RX_uIP" "C:\WorkSpace\RX_uIP\RX_uIP\RX_uIP.hwp" "RX" "Renesas RX Standard" "Empty Application" "RX600" "Other" 
+[INFORMATION]
+"No project information available" 
+[TOOL_CHAIN]
+"Renesas RX Standard Toolchain" "1.1.0.0" 
+[CONFIGURATIONS]
+"Big_Endian" "C:\WorkSpace\RX_uIP\RX_uIP\Big_Endian" 
+"Little_Endian" "C:\WorkSpace\RX_uIP\RX_uIP\Little_Endian" 
+[BUILD_PHASES]
+"Renesas OptLinker" 1 
+"Renesas RX Assembler" 1 
+"Renesas RX C/C++ Compiler" 1 
+"Renesas RX C/C++ Library Generator" 1 
+"Renesas RX Configurator" 1 
+[TOOL_ENVIRONMENT]
+[EXTENSIONS]
+"Absolute file" "ABS" 
+"Assembly include file" "INC" 
+"Assembly list file" "LST" 
+"Assembly source file" "S" 
+"Assembly source file" "SRC" 
+"Binary file" "BIN" 
+"C header file" "H" 
+"C source file" "C" 
+"C++ header file" "HPP" 
+"C++ source file" "CC" 
+"C++ source file" "CP" 
+"C++ source file" "CPP" 
+"CPU information file" "CPU" 
+"Calling information file" "CAL" 
+"Configuration file" "CFG" 
+"Debug information file" "DBG" 
+"Hex file" "HEX" 
+"Library file" "LIB" 
+"Library information file" "LBP" 
+"Linkage map file" "MAP" 
+"Linkage symbol file" "FSY" 
+"Object file" "OBJ" 
+"Optimize map file" "bls" 
+"Preprocessed C source file" "P" 
+"Preprocessed C++ source file" "PP" 
+"Relocatable file" "REL" 
+"Rts information file" "RTS" 
+"S-Record file" "MOT" 
+"Stack information file" "SNI" 
+"TD include object file" "RTI" 
+[FILE_GROUPS]
+"Absolute file" "BIN" "NONE" "" 
+"Assembly include file" "TEXT" "EDITOR" "" 
+"Assembly list file" "TEXT" "EDITOR" "" 
+"Assembly source file" "TEXT" "EDITOR" "" 
+"Binary file" "BIN" "NONE" "" 
+"C header file" "TEXT" "EDITOR" "" 
+"C source file" "TEXT" "EDITOR" "" 
+"C++ header file" "TEXT" "EDITOR" "" 
+"C++ source file" "TEXT" "EDITOR" "" 
+"CPU information file" "BIN" "NONE" "" 
+"Calling information file" "BIN" "NONE" "" 
+"Configuration file" "TEXT" "EDITOR" "" 
+"Debug information file" "BIN" "NONE" "" 
+"Hex file" "TEXT" "EDITOR" "" 
+"Library file" "BIN" "NONE" "" 
+"Library information file" "TEXT" "EDITOR" "" 
+"Linkage map file" "TEXT" "EDITOR" "" 
+"Linkage symbol file" "TEXT" "EDITOR" "" 
+"Object file" "BIN" "NONE" "" 
+"Optimize map file" "BIN" "NONE" "" 
+"Preprocessed C source file" "TEXT" "EDITOR" "" 
+"Preprocessed C++ source file" "TEXT" "EDITOR" "" 
+"Relocatable file" "BIN" "NONE" "" 
+"Rts information file" "BIN" "NONE" "" 
+"S-Record file" "TEXT" "EDITOR" "" 
+"Stack information file" "BIN" "NONE" "" 
+"TD include object file" "BIN" "NONE" "" 
+[ASSOCIATED_APPLICATIONS]
+[TOOLCHAIN_PHASE]
+"Renesas OptLinker" 
+"Renesas RX Assembler" 
+"Renesas RX C/C++ Compiler" 
+"Renesas RX C/C++ Library Generator" 
+"Renesas RX Configurator" 
+[UTILITY_PHASE]
+[CUSTOM_PHASES]
+[CUSTOM_PHASE_INPUT_GROUP]
+[CUSTOM_PHASE_OUTPUT_SYNTAX]
+[BUILD_ORDER]
+"Renesas RX C/C++ Library Generator" 1 
+"Renesas RX C/C++ Compiler" 1 
+"Renesas RX Assembler" 1 
+"Renesas OptLinker" 1 
+"Renesas RX Configurator" 0 
+[BUILD_PHASE_DETAILS]
+"Renesas OptLinker" "Object file|Library file|Relocatable file" 0 
+"Renesas RX Assembler" "Assembly source file|Linkage symbol file" 1 
+"Renesas RX C/C++ Compiler" "C source file|C++ source file" 1 
+"Renesas RX C/C++ Library Generator" "" 0 
+"Renesas RX Configurator" "Configuration file" 0 
+[BUILD_FILE_ORDER_Assembly source file]
+"Renesas RX Assembler" 1 
+[BUILD_FILE_ORDER_C source file]
+"Renesas RX C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_C++ source file]
+"Renesas RX C/C++ Compiler" 1 
+[BUILD_FILE_ORDER_Linkage symbol file]
+"Renesas RX Assembler" 1 
+[SCRAP]
+"Project Generator Setup File" "" 
+[MAPPINGS]
+"Assembly source file" "Renesas RX Assembler" "Renesas RX C/C++ Compiler" 
+"Library file" "Renesas OptLinker" "Renesas RX C/C++ Library Generator" 
+"Object file" "Renesas OptLinker" "Renesas RX Assembler" 
+"Object file" "Renesas OptLinker" "Renesas RX C/C++ Compiler" 
+[PROJECT_FILES]
+"C:\WorkSpace\RX_uIP\src\bsp\dbsct.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\hwsetup.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\hwsetup.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\intprg.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\iodefine.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\lcd.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\lcd.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\resetprg.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\rskrx62n.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\sbrk.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\sbrk.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\stacksct.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\typedefine.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\vect.h" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\vecttbl.c" "User" "src|bsp" 2 
+"C:\WorkSpace\RX_uIP\src\driver\phy.c" "User" "src|driver" 2 
+"C:\WorkSpace\RX_uIP\src\driver\phy.h" "User" "src|driver" 2 
+"C:\WorkSpace\RX_uIP\src\driver\r_ether.c" "User" "src|driver" 2 
+"C:\WorkSpace\RX_uIP\src\driver\r_ether.h" "User" "src|driver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\dhcpc\dhcpc.c" "User" "src|uip|apps|dhcpc" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\dhcpc\dhcpc.h" "User" "src|uip|apps|dhcpc" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\http-strings.c" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\http-strings.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-cgi.c" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-cgi.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-fs.c" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-fs.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-fsdata.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd.c" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\webserver.h" "User" "src|uip|apps|webserver" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\clock.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\lc-addrlabels.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\lc-switch.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\lc.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\main.c" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\psock.c" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\psock.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\pt.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\timer.c" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\timer.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip.c" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip_arch.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip_arp.c" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip_arp.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uipopt.h" "User" "src|uip|uip" 2 
+"C:\WorkSpace\RX_uIP\src\uip\unix\clock-arch.c" "User" "src|uip|unix" 2 
+"C:\WorkSpace\RX_uIP\src\uip\unix\clock-arch.h" "User" "src|uip|unix" 2 
+"C:\WorkSpace\RX_uIP\src\uip\unix\uip-conf.h" "User" "src|uip|unix" 2 
+"C:\WorkSpace\RX_uIP\src\user-app\user-app.c" "User" "src|user-app" 2 
+"C:\WorkSpace\RX_uIP\src\user-app\user-app.h" "User" "src|user-app" 2 
+[FOLDER]
+"C source file" "C source file" 
+"src" "src" 
+"src|bsp" "" 
+"src|driver" "" 
+"src|uip" "" 
+"src|uip|apps" "" 
+"src|uip|apps|dhcpc" "" 
+"src|uip|apps|webserver" "" 
+"src|uip|uip" "" 
+"src|uip|unix" "" 
+"src|user-app" "" 
+[GENERAL_DATA_PROJECT]
+"FDT_AutoConnect" "0" 
+"FDT_BaseDevice" "" 
+"FDT_BaudRate" "" 
+"FDT_BlockLockConnect" "1" 
+"FDT_BlockLockDisconnect" "1" 
+"FDT_BootMode" "FALSE" 
+"FDT_CKM" "0" 
+"FDT_CKP" "0" 
+"FDT_ClockMode" "0" 
+"FDT_ClockSync" "00000000" 
+"FDT_Comments" "" 
+"FDT_ConnectionResetSuppression" "FFFFFFFF" 
+"FDT_Device" "" 
+"FDT_DoReadbackVerification" "No" 
+"FDT_DoSecurityProtection" "Prompt" 
+"FDT_DoSecurityProtectionLevel" "00" 
+"FDT_Frequency" "0.0000" 
+"FDT_Interface" "" 
+"FDT_InternalClock" "FALSE" 
+"FDT_KernelPath" "" 
+"FDT_KernelResident" "FALSE" 
+"FDT_McuId" "0" 
+"FDT_MessageLevel" "0" 
+"FDT_PinOutputs" "00000000" 
+"FDT_PinSettings" "00000000" 
+"FDT_Port" "" 
+"FDT_Protection" "0" 
+"FDT_Protocol" "" 
+"FDT_ReinterrogateGenericDevice" "No" 
+"FDT_ResetOnDisconnect" "No" 
+"FDT_ResetPinOutputs" "00000000" 
+"FDT_ResetPinSettings" "00000000" 
+"FDT_SerNumConfigString" "" 
+"FDT_SerNumDllFunction" "" 
+"FDT_SerNumDllLocation" "" 
+"FDT_SerNumEnabled" "FALSE" 
+"FDT_SerNumMemArea" "" 
+"FDT_UPMPinSettings" "00000000" 
+"FDT_UseDefaultBaudRate" "FALSE" 
+"FDT_UseInternalKernel" "TRUE" 
+"FDT_UserPinOutputs" "00000000" 
+"FDT_UserPinSettings" "00000000" 
+"USE_CUSTOM_LINKAGE_ORDER" "0" 
+[ON_DEMAND_COMPONENTS_LOADED]
+[SYNC_SESSION_NAMES]
+[SESSIONS]
+"DefaultSession" "C:\WorkSpace\RX_uIP\RX_uIP\DefaultSession.hsf" 0 
+"SessionRX600_E1_E20_SYSTEM" "C:\WorkSpace\RX_uIP\RX_uIP\SessionRX600_E1_E20_SYSTEM.hsf" 0 
+[GENERAL_DATA_SESSION_DefaultSession]
+[GENERAL_DATA_SESSION_SessionRX600_E1_E20_SYSTEM]
+[OPTIONS_Big_Endian_Renesas OptLinker]
+"Single Shot" "0e4e688bbfb3cc10" 5 
+[OPTIONS_Big_Endian_Renesas RX Assembler]
+"Assembly source file" "0b17017a9fb3cc10" 4 
+"Linkage symbol file" "0b17017a9fb3cc10" 4 
+[OPTIONS_Big_Endian_Renesas RX C/C++ Compiler]
+"C source file" "0b00e07a9fb3cc10" 2 
+"C++ source file" "0b00e07a9fb3cc10" 3 
+"C:\WorkSpace\RX_uIP\src\bsp\dbsct.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\hwsetup.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\intprg.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\lcd.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\resetprg.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\sbrk.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\vecttbl.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\driver\phy.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\driver\r_ether.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\dhcpc\dhcpc.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\http-strings.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-cgi.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-fs.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\main.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\psock.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\timer.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip_arp.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\unix\clock-arch.c" "0b00e07a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\user-app\user-app.c" "0b00e07a9fb3cc10" 2 
+[OPTIONS_Big_Endian_Renesas RX C/C++ Library Generator]
+"Single Shot" "0b00e07a9fb3cc10" 1 
+[OPTIONS_Big_Endian_Renesas RX Configurator]
+"Single Shot" "0b17017a9fb3cc10" 6 
+[OPTIONS_Big_Endian]
+"" 0 
+"[V|VERSION|1] [B|COMMAND|1] [S|OUTPUTPATH|^"$(CONFIGDIR)^"] [S|SPEC|UITRON4] [S|CPU|RX600] [S|ENDIAN|BIG] [S|BASE|00000000=NONE]
+" 6 
+"[V|VERSION|1] [B|SJIS|1] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [S|CPU|RX600] [S|ENDIAN|BIG] [S|BASE|00000000=NONE]
+" 4 
+"[V|VERSION|1] [S|LANG|C99] [B|SJIS|1] [S|INCLUDE|^"$(WORKSPDIR)\src\bsp^"|^"$(WORKSPDIR)\src\driver^"|^"$(WORKSPDIR)\\src\user-app^"|^"$(WORKSPDIR)\src\uip\uip^"|^"$(WORKSPDIR)\\src\uip\unix^"|^"$(WORKSPDIR)\src\uip\apps\dhcpc^"|^"$(WORKSPDIR)\src\uip\apps\webserver^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004_CHECK_RULE|ALL] [S|MISRA2004_RULE|1.1|3.4|4.1|5.2|5.3|5.4|5.5|5.6|5.7|6.1|6.2|6.3|6.4|6.5|7.1|8.1|8.2|8.3|8.5|8.6|8.7|8.8|8.11|8.12|9.2|9.3|10.1|10.2|10.3|10.4|10.5|10.6|11.1|11.2|11.3|11.4|11.5|12.1|12.2|12.3|12.4|12.5|12.6|12.7|12.8|12.9|12.10|12.11|12.12|12.13|13.1|13.2|13.3|13.4|13.7|14.1|14.2|14.3|14.4|14.5|14.6|14.7|14.8|14.9|14.10|15.1|15.2|15.3|15.4|15.5|16.1|16.2|16.3|16.4|16.5|16.6|16.8|16.9|17.3|17.4|17.5|17.6|18.1|18.2|18.4|19.1|20.2|20.4|20.5|20.7|20.8|20.9|20.10|20.11|20.12] [S|MISRA1998_CHECK_RULE|ALL] [S|MISRA1998_RULE|1|5|8|12|13|14|17|18|19|20|21|22|24|28|29|31|32|33|34|35|36|37|38|39|40|42|43|44|45|46|48|49|50|51|53|54|55|56|57|58|59|60|61|62|63|64|65|68|69|70|71|72|73|74|75|76|77|78|79|80|82|83|84|85|99|101|102|103|104|105|106|108|110|111|112|113|115|118|119|121|122|123|124|125|126|127] [S|MISRA_GROUP_FILE_PATH|^"$(PROJDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|ENDIAN|BIG] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 2 
+"[V|VERSION|1] [S|LANG|CPP] [B|SJIS|1] [S|INCLUDE|^"$(WORKSPDIR)\src\bsp^"|^"$(WORKSPDIR)\src\driver^"|^"$(WORKSPDIR)\\src\user-app^"|^"$(WORKSPDIR)\src\uip\uip^"|^"$(WORKSPDIR)\\src\uip\unix^"|^"$(WORKSPDIR)\src\uip\apps\dhcpc^"|^"$(WORKSPDIR)\src\uip\apps\webserver^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004_CHECK_RULE|ALL] [S|MISRA2004_RULE|1.1|3.4|4.1|5.2|5.3|5.4|5.5|5.6|5.7|6.1|6.2|6.3|6.4|6.5|7.1|8.1|8.2|8.3|8.5|8.6|8.7|8.8|8.11|8.12|9.2|9.3|10.1|10.2|10.3|10.4|10.5|10.6|11.1|11.2|11.3|11.4|11.5|12.1|12.2|12.3|12.4|12.5|12.6|12.7|12.8|12.9|12.10|12.11|12.12|12.13|13.1|13.2|13.3|13.4|13.7|14.1|14.2|14.3|14.4|14.5|14.6|14.7|14.8|14.9|14.10|15.1|15.2|15.3|15.4|15.5|16.1|16.2|16.3|16.4|16.5|16.6|16.8|16.9|17.3|17.4|17.5|17.6|18.1|18.2|18.4|19.1|20.2|20.4|20.5|20.7|20.8|20.9|20.10|20.11|20.12] [S|MISRA1998_CHECK_RULE|ALL] [S|MISRA1998_RULE|1|5|8|12|13|14|17|18|19|20|21|22|24|28|29|31|32|33|34|35|36|37|38|39|40|42|43|44|45|46|48|49|50|51|53|54|55|56|57|58|59|60|61|62|63|64|65|68|69|70|71|72|73|74|75|76|77|78|79|80|82|83|84|85|99|101|102|103|104|105|106|108|110|111|112|113|115|118|119|121|122|123|124|125|126|127] [S|MISRA_GROUP_FILE_PATH|^"$(PROJDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|ENDIAN|BIG] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 3 
+"[V|VERSION|1] [S|MODE|BUILD/CHANGED] [S|EXISTOUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [S|LANG|C99] [B|RUNTIME|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|NEW|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|SIZE|1] [I|INLINE|100] [I|LOOP|2] [S|CPU|RX600] [S|ENDIAN|BIG] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 1 
+"[V|VERSION|6] [S|FORM|STYPE] [S|BYTE_COUNT_VALUE|FF] [B|DEBUG|1] [S|ROM|(D,R)|(D_1,R_1)|(D_2,R_2)] [S|CRC|NONE|DEFAULT|00000000] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|SHOW|METHODALL|] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [I|SPACE|^"FF^"] [B|OPTIMIZE|0] [S|START|B_RX_DESC,B_TX_DESC,B_ETHERNET_BUFFERS,B_1,R_1,B_2,R_2,B,R,SU,SI(01000)|PResetPRG,C_1,C_2,C,L*,C$*,D*,P,PIntPRG,W*(0FFF80000)|C_FLASH_CONFIG_PARAMS_1(0FFFFFF00)|FIXEDVECT(0FFFFFFD0)] [S|ENDIAN|BIG]
+" 5 
+[EXCLUDED_FILES_Big_Endian]
+[LINKAGE_ORDER_Big_Endian]
+[GENERAL_DATA_CONFIGURATION_Big_Endian]
+[OPTIONS_Little_Endian_Renesas OptLinker]
+"Single Shot" "0289c03d1da4cc10" 5 
+[OPTIONS_Little_Endian_Renesas RX Assembler]
+"Assembly source file" "0abb217a9fb3cc10" 4 
+"Linkage symbol file" "0abb217a9fb3cc10" 4 
+[OPTIONS_Little_Endian_Renesas RX C/C++ Compiler]
+"C source file" "0b17017a9fb3cc10" 2 
+"C++ source file" "0b17017a9fb3cc10" 3 
+"C:\WorkSpace\RX_uIP\src\bsp\dbsct.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\hwsetup.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\intprg.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\lcd.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\resetprg.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\sbrk.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\bsp\vecttbl.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\driver\phy.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\driver\r_ether.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\dhcpc\dhcpc.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\http-strings.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-cgi.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd-fs.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\apps\webserver\httpd.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\main.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\psock.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\timer.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\uip\uip_arp.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\uip\unix\clock-arch.c" "0b17017a9fb3cc10" 2 
+"C:\WorkSpace\RX_uIP\src\user-app\user-app.c" "0b17017a9fb3cc10" 2 
+[OPTIONS_Little_Endian_Renesas RX C/C++ Library Generator]
+"Single Shot" "0b17017a9fb3cc10" 1 
+[OPTIONS_Little_Endian_Renesas RX Configurator]
+"Single Shot" "0abb217a9fb3cc10" 6 
+[OPTIONS_Little_Endian]
+"" 0 
+"[V|VERSION|1] [B|COMMAND|1] [S|OUTPUTPATH|^"$(CONFIGDIR)^"] [S|SPEC|UITRON4] [S|CPU|RX600] [S|BASE|00000000=NONE]
+" 6 
+"[V|VERSION|1] [B|SJIS|1] [B|DEBUG|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [S|CPU|RX600] [S|BASE|00000000=NONE]
+" 4 
+"[V|VERSION|1] [S|LANG|C99] [B|SJIS|1] [S|INCLUDE|^"$(WORKSPDIR)\src\bsp^"|^"$(WORKSPDIR)\src\driver^"|^"$(WORKSPDIR)\\src\user-app^"|^"$(WORKSPDIR)\src\uip\uip^"|^"$(WORKSPDIR)\\src\uip\unix^"|^"$(WORKSPDIR)\src\uip\apps\dhcpc^"|^"$(WORKSPDIR)\src\uip\apps\webserver^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004_CHECK_RULE|ALL] [S|MISRA2004_RULE|1.1|3.4|4.1|5.2|5.3|5.4|5.5|5.6|5.7|6.1|6.2|6.3|6.4|6.5|7.1|8.1|8.2|8.3|8.5|8.6|8.7|8.8|8.11|8.12|9.2|9.3|10.1|10.2|10.3|10.4|10.5|10.6|11.1|11.2|11.3|11.4|11.5|12.1|12.2|12.3|12.4|12.5|12.6|12.7|12.8|12.9|12.10|12.11|12.12|12.13|13.1|13.2|13.3|13.4|13.7|14.1|14.2|14.3|14.4|14.5|14.6|14.7|14.8|14.9|14.10|15.1|15.2|15.3|15.4|15.5|16.1|16.2|16.3|16.4|16.5|16.6|16.8|16.9|17.3|17.4|17.5|17.6|18.1|18.2|18.4|19.1|20.2|20.4|20.5|20.7|20.8|20.9|20.10|20.11|20.12] [S|MISRA1998_CHECK_RULE|ALL] [S|MISRA1998_RULE|1|5|8|12|13|14|17|18|19|20|21|22|24|28|29|31|32|33|34|35|36|37|38|39|40|42|43|44|45|46|48|49|50|51|53|54|55|56|57|58|59|60|61|62|63|64|65|68|69|70|71|72|73|74|75|76|77|78|79|80|82|83|84|85|99|101|102|103|104|105|106|108|110|111|112|113|115|118|119|121|122|123|124|125|126|127] [S|MISRA_GROUP_FILE_PATH|^"$(PROJDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 2 
+"[V|VERSION|1] [S|LANG|CPP] [B|SJIS|1] [S|INCLUDE|^"$(WORKSPDIR)\src\bsp^"|^"$(WORKSPDIR)\src\driver^"|^"$(WORKSPDIR)\\src\user-app^"|^"$(WORKSPDIR)\src\uip\uip^"|^"$(WORKSPDIR)\\src\uip\unix^"|^"$(WORKSPDIR)\src\uip\apps\dhcpc^"|^"$(WORKSPDIR)\src\uip\apps\webserver^"] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(FILELEAF).obj^"] [B|DEBUG|1] [B|SIZE|1] [B|MAP|0] [I|INLINE|100] [I|LOOP|2] [S|MISRA2004_CHECK_RULE|ALL] [S|MISRA2004_RULE|1.1|3.4|4.1|5.2|5.3|5.4|5.5|5.6|5.7|6.1|6.2|6.3|6.4|6.5|7.1|8.1|8.2|8.3|8.5|8.6|8.7|8.8|8.11|8.12|9.2|9.3|10.1|10.2|10.3|10.4|10.5|10.6|11.1|11.2|11.3|11.4|11.5|12.1|12.2|12.3|12.4|12.5|12.6|12.7|12.8|12.9|12.10|12.11|12.12|12.13|13.1|13.2|13.3|13.4|13.7|14.1|14.2|14.3|14.4|14.5|14.6|14.7|14.8|14.9|14.10|15.1|15.2|15.3|15.4|15.5|16.1|16.2|16.3|16.4|16.5|16.6|16.8|16.9|17.3|17.4|17.5|17.6|18.1|18.2|18.4|19.1|20.2|20.4|20.5|20.7|20.8|20.9|20.10|20.11|20.12] [S|MISRA1998_CHECK_RULE|ALL] [S|MISRA1998_RULE|1|5|8|12|13|14|17|18|19|20|21|22|24|28|29|31|32|33|34|35|36|37|38|39|40|42|43|44|45|46|48|49|50|51|53|54|55|56|57|58|59|60|61|62|63|64|65|68|69|70|71|72|73|74|75|76|77|78|79|80|82|83|84|85|99|101|102|103|104|105|106|108|110|111|112|113|115|118|119|121|122|123|124|125|126|127] [S|MISRA_GROUP_FILE_PATH|^"$(PROJDIR)\$(PROJECTNAME).rde^"] [S|CPU|RX600] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 3 
+"[V|VERSION|1] [S|MODE|BUILD/CHANGED] [S|EXISTOUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [S|LANG|C99] [B|RUNTIME|1] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [B|NEW|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\$(PROJECTNAME).lib^"] [B|SIZE|1] [I|INLINE|100] [I|LOOP|2] [S|CPU|RX600] [S|BIT_ORDER|LEFT] [S|BASE|00000000=NONE]
+" 1 
+"[V|VERSION|6] [S|FORM|STYPE] [S|BYTE_COUNT_VALUE|FF] [B|DEBUG|1] [S|ROM|(D,R)|(D_1,R_1)|(D_2,R_2)] [S|CRC|NONE|DEFAULT|00000000] [B|LIST|1] [S|LIST|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|SHOW|METHODALL|] [S|OUTPUT|^"$(CONFIGDIR)\$(PROJECTNAME).mot^"] [I|SPACE|^"FF^"] [B|OPTIMIZE|0] [S|START|B_RX_DESC,B_TX_DESC,B_ETHERNET_BUFFERS*,B_1,R_1,B_2,R_2,B,R,SU,SI(01000)|PResetPRG,C_1,C_2,C,L*,C$*,D*,P,PIntPRG,W*(0FFF80000)|C_FLASH_CONFIG_PARAMS_1(0FFFFFF00)|FIXEDVECT(0FFFFFFD0)]
+" 5 
+[EXCLUDED_FILES_Little_Endian]
+[LINKAGE_ORDER_Little_Endian]
+[GENERAL_DATA_CONFIGURATION_Little_Endian]
+[GENERAL_DATA_CONFIGURATION_SESSION_Big_Endian_DefaultSession]
+[SESSION_DATA_CONFIGURATION_SESSION_Big_Endian_DefaultSession]
+"MEMORY_MAPPING_OPTIONS" "" 
+[GENERAL_DATA_CONFIGURATION_SESSION_Big_Endian_SessionRX600_E1_E20_SYSTEM]
+[SESSION_DATA_CONFIGURATION_SESSION_Big_Endian_SessionRX600_E1_E20_SYSTEM]
+"MEMORY_MAPPING_OPTIONS" "Unknown Options" 
+[GENERAL_DATA_CONFIGURATION_SESSION_Little_Endian_DefaultSession]
+[SESSION_DATA_CONFIGURATION_SESSION_Little_Endian_DefaultSession]
+"MEMORY_MAPPING_OPTIONS" "" 
+[GENERAL_DATA_CONFIGURATION_SESSION_Little_Endian_SessionRX600_E1_E20_SYSTEM]
+[SESSION_DATA_CONFIGURATION_SESSION_Little_Endian_SessionRX600_E1_E20_SYSTEM]
+"MEMORY_MAPPING_OPTIONS" "Unknown Options" 
+[EXT_DEBUGGER_INFO]
+0 "" "" "" "" 
+[END]
