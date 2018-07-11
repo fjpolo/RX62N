@@ -1,0 +1,92 @@
+Renesas Optimizing Linker (W2.08.00 )             11-Jul-2018 13:06:04
+
+*** Options ***
+
+-noprelink
+-subcommand=LinkerSubCommand.tmp
+-input=".\FreeRTOS/portable/Renesas/RX600\port_asm.obj"
+-input=".\FreeRTOS\list.obj"
+-input=".\FreeRTOS/portable/MemMang\heap_4.obj"
+-input=".\FreeRTOS/portable/Renesas/RX600\port.obj"
+-input=".\FreeRTOS\queue.obj"
+-input=".\FreeRTOS\tasks.obj"
+-input=".\FreeRTOS\timers.obj"
+-input=".\ParTest.obj"
+-input=".\dbsct.obj"
+-input=".\hwsetup.obj"
+-input=".\intprg.obj"
+-input=".\led.obj"
+-input=".\main.obj"
+-input=".\printf-stdarg.obj"
+-input=".\resetprg.obj"
+-input=".\sbrk.obj"
+-input=".\vecttbl.obj"
+-library=".\KitRTOS_Test003_Blinky_Blocking1.lib"
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,PResetPRG,C_1,C_2,C,C$*,D*,W*,L,PIntPRG,P/0FFF80000,FIXEDVECT/0FFFFFF80
+-output=KitRTOS_Test003_Blinky_Blocking1.abs
+-form=absolute
+-nomessage
+-list=KitRTOS_Test003_Blinky_Blocking1.map
+-nooptimize
+-rom=D=R,D_1=R_1,D_2=R_2
+-nologo
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+SU
+                                  00000004  00000103       100   4
+SI
+                                  00000104  00000403       300   4
+B_1
+                                  00000404  0000045f        5c   1
+R_1
+                                  00000460  00000460         0   1
+B_2
+                                  00000460  00000460         0   1
+R_2
+                                  00000460  00000460         0   1
+B
+                                  00000460  00006d93      6934   4
+R
+                                  00006d94  00006de7        54   4
+PResetPRG
+                                  fff80000  fff80034        35   1
+C_1
+                                  fff80035  fff80048        14   1
+C_2
+                                  fff80049  fff80049         0   1
+C
+                                  fff8004c  fff8007f        34   4
+C$DSEC
+                                  fff80080  fff800a3        24   4
+C$BSEC
+                                  fff800a4  fff800bb        18   4
+C$INIT
+                                  fff800bc  fff800bc         0   1
+C$VECT
+                                  fff800bc  fff804bb       400   4
+C$VTBL
+                                  fff804bc  fff804bc         0   1
+D
+                                  fff804bc  fff8050f        54   4
+D_1
+                                  fff80510  fff80510         0   1
+D_2
+                                  fff80510  fff80510         0   1
+W
+                                  fff80510  fff80510         0   1
+W_1
+                                  fff80510  fff80510         0   1
+W_2
+                                  fff80510  fff80510         0   1
+L
+                                  fff80510  fff8057e        6f   4
+PIntPRG
+                                  fff8057f  fff806d2       154   1
+P
+                                  fff806d3  fff8275c      208a   1
+FIXEDVECT
+                                  ffffff80  ffffffff        80   4
