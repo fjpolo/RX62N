@@ -1,0 +1,96 @@
+Renesas Optimizing Linker (W2.08.00 )             18-Jul-2018 14:47:05
+
+*** Options ***
+
+-noprelink
+-subcommand=LinkerSubCommand.tmp
+-input=".\FreeRTOS/portable/Renesas/RX600\port_asm.obj"
+-input=".\FreeRTOS\croutine.obj"
+-input=".\FreeRTOS\event_groups.obj"
+-input=".\FreeRTOS\list.obj"
+-input=".\FreeRTOS/portable/MemMang\heap_4.obj"
+-input=".\FreeRTOS/portable/Renesas/RX600\port.obj"
+-input=".\FreeRTOS\queue.obj"
+-input=".\FreeRTOS\stream_buffer.obj"
+-input=".\FreeRTOS\tasks.obj"
+-input=".\FreeRTOS\timers.obj"
+-input=".\src\ParTest.obj"
+-input=".\src\dbsct.obj"
+-input=".\src\hwsetup.obj"
+-input=".\src\intprg.obj"
+-input=".\src\led.obj"
+-input=".\src\main.obj"
+-input=".\src\maintasks.obj"
+-input=".\src\printf-stdarg.obj"
+-input=".\src\resetprg.obj"
+-input=".\src\sbrk.obj"
+-input=".\src\vecttbl.obj"
+-library=".\KitRTOS_Test015_GroupEvents.lib"
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,PResetPRG,C_1,C_2,C,C$*,D*,W*,L,PIntPRG,P/0FFF80000,FIXEDVECT/0FFFFFF80
+-output=KitRTOS_Test015_GroupEvents.abs
+-form=absolute
+-nomessage
+-list=KitRTOS_Test015_GroupEvents.map
+-nooptimize
+-rom=D=R,D_1=R_1,D_2=R_2
+-nologo
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+SU
+                                  00000004  00000103       100   4
+SI
+                                  00000104  00000403       300   4
+B_1
+                                  00000404  0000b803      b400   1
+R_1
+                                  0000b804  0000b804         0   1
+B_2
+                                  0000b804  0000b804         0   1
+R_2
+                                  0000b804  0000b804         0   1
+B
+                                  0000b804  0000bdab       5a8   4
+R
+                                  0000bdac  0000be17        6c   4
+PResetPRG
+                                  fff80000  fff80034        35   1
+C_1
+                                  fff80035  fff80035         0   1
+C_2
+                                  fff80035  fff80035         0   1
+C
+                                  fff80038  fff8006b        34   4
+C$DSEC
+                                  fff8006c  fff8008f        24   4
+C$BSEC
+                                  fff80090  fff800a7        18   4
+C$INIT
+                                  fff800a8  fff800a8         0   1
+C$VECT
+                                  fff800a8  fff804a7       400   4
+C$VTBL
+                                  fff804a8  fff804a8         0   1
+D
+                                  fff804a8  fff80513        6c   4
+D_1
+                                  fff80514  fff80514         0   1
+D_2
+                                  fff80514  fff80514         0   1
+W
+                                  fff80514  fff80514         0   1
+W_1
+                                  fff80514  fff80514         0   1
+W_2
+                                  fff80514  fff80514         0   1
+L
+                                  fff80514  fff80566        53   4
+PIntPRG
+                                  fff80567  fff806ee       188   1
+P
+                                  fff806ef  fff845a2      3eb4   1
+FIXEDVECT
+                                  ffffff80  ffffffff        80   4
