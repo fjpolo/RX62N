@@ -1,0 +1,98 @@
+Renesas Optimizing Linker (W2.08.00 )             03-Aug-2018 12:06:13
+
+*** Options ***
+
+-library=C:\Users\fpolo\e2_studio\workspace\RTOS_Test003_LCD\RPDL\RX62N_library.lib
+-noprelink
+-subcommand=LinkerSubCommand.tmp
+-input=".\FreeRTOS/portable/Renesas/RX600\port_asm.obj"
+-input=".\FreeRTOS\croutine.obj"
+-input=".\FreeRTOS\event_groups.obj"
+-input=".\FreeRTOS\list.obj"
+-input=".\FreeRTOS/portable/MemMang\heap_4.obj"
+-input=".\FreeRTOS/portable/Renesas/RX600\port.obj"
+-input=".\FreeRTOS\queue.obj"
+-input=".\FreeRTOS\stream_buffer.obj"
+-input=".\FreeRTOS\tasks.obj"
+-input=".\FreeRTOS\timers.obj"
+-input=".\pwm\pwm.obj"
+-input=".\r_bsp\dbsct.obj"
+-input=".\r_bsp\hwsetup.obj"
+-input=".\r_bsp\intprg.obj"
+-input=".\r_bsp\printf-stdarg.obj"
+-input=".\r_bsp\resetprg.obj"
+-input=".\r_bsp\sbrk.obj"
+-input=".\r_bsp\vecttbl.obj"
+-input=".\rtos_tasks\maintasks.obj"
+-input=".\src\ParTest.obj"
+-input=".\src\led.obj"
+-input=".\src\main.obj"
+-library=".\KitRTOS_Test0020_PWM.lib"
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,PResetPRG,C_1,C_2,C,C$*,D*,W*,L,PIntPRG,P/0FFF80000,FIXEDVECT/0FFFFFF80
+-output=KitRTOS_Test0020_PWM.abs
+-form=absolute
+-nomessage
+-list=KitRTOS_Test0020_PWM.map
+-nooptimize
+-rom=D=R,D_1=R_1,D_2=R_2
+-nologo
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+SU
+                                  00000004  00000103       100   4
+SI
+                                  00000104  00000403       300   4
+B_1
+                                  00000404  0000b803      b400   1
+R_1
+                                  0000b804  0000b805         2   1
+B_2
+                                  0000b806  0000b806         0   1
+R_2
+                                  0000b806  0000b806         0   1
+B
+                                  0000b808  0000bf33       72c   4
+R
+                                  0000bf34  0000bfa7        74   4
+PResetPRG
+                                  fff80000  fff80034        35   1
+C_1
+                                  fff80035  fff80039         5   1
+C_2
+                                  fff8003a  fff8003a         0   1
+C
+                                  fff8003c  fff80073        38   4
+C$DSEC
+                                  fff80074  fff80097        24   4
+C$BSEC
+                                  fff80098  fff800af        18   4
+C$INIT
+                                  fff800b0  fff800b0         0   1
+C$VECT
+                                  fff800b0  fff804af       400   4
+C$VTBL
+                                  fff804b0  fff804b0         0   1
+D
+                                  fff804b0  fff80523        74   4
+D_1
+                                  fff80524  fff80525         2   1
+D_2
+                                  fff80526  fff80526         0   1
+W
+                                  fff80528  fff80528         0   4
+W_1
+                                  fff80528  fff8058f        68   1
+W_2
+                                  fff80590  fff80673        e4   2
+L
+                                  fff80674  fff80728        b5   4
+PIntPRG
+                                  fff80729  fff8087c       154   1
+P
+                                  fff8087d  fff8905e      87e2   1
+FIXEDVECT
+                                  ffffff80  ffffffff        80   4
